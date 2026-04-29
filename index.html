@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahead for iOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --peach: #f5a623;
+      --peach-btn: #f5a94e;
+      --text-dark: #1c1c2e;
+      --text-muted: #9b9aaa;
+      --input-border: #e8e4f0;
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(ellipse 100% 80% at 50% 0%, #ede9f7 0%, #f7f4fb 30%, #fdf0e4 65%, #fde8cc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .app-icon {
+      width: 110px;
+      height: 110px;
+      border-radius: 26px;
+      margin-bottom: 32px;
+      box-shadow: 0 12px 40px rgba(180, 120, 60, 0.22), 0 2px 8px rgba(0,0,0,0.08);
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 400;
+      color: var(--text-dark);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .tagline {
+      font-size: 17px;
+      font-weight: 300;
+      color: #55536a;
+      line-height: 1.6;
+      margin-bottom: 40px;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .form-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--input-border);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .form-wrap:focus-within {
+      box-shadow: 0 4px 28px rgba(245,169,78,0.18), 0 1px 3px rgba(0,0,0,0.04);
+      border-color: #f5c98a;
+    }
+
+    .email-input {
+      flex: 1;
+      padding: 15px 18px;
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text-dark);
+      background: transparent;
+    }
+
+    .email-input::placeholder { color: #bbb8cc; }
+
+    .submit-btn {
+      width: 44px;
+      height: 44px;
+      margin: 5px;
+      flex-shrink: 0;
+      border: none;
+      border-radius: 10px;
+      background: var(--peach-btn);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, transform 0.1s;
+    }
+
+    .submit-btn:hover { background: #f09a30; }
+    .submit-btn:active { transform: scale(0.95); }
+    .submit-btn:disabled { background: #ddd; cursor: not-allowed; }
+
+    .submit-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sub-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.1px;
+      animation: fadeUp 0.8s ease 0.5s both;
+    }
+
+    /* Success state */
+    .success-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .success-state.visible { display: flex; }
+
+    .success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f5c97a, #f5a94e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .success-icon svg {
+      width: 22px; height: 22px;
+      stroke: #fff; fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .success-state h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-dark);
+    }
+
+    .success-state p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Error */
+    .error-text {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #e05252;
+      display: none;
+    }
+    .error-text.visible { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img class="app-icon" src="appstore.png" alt="Ahead app icon" />
+
+    <h1>Ahead for iOS</h1>
+    <p class="tagline">Everybody's life looks differently.<br>Your software should too.</p>
+
+    <div class="form-wrap" id="formWrap">
+      <input
+        class="email-input"
+        type="email"
+        id="emailInput"
+        placeholder="Enter your email"
+        autocomplete="email"
+      />
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <p class="error-text" id="errorText">Something went wrong. Please try again.</p>
+
+    <div class="success-state" id="successState">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>You're on the list!</h2>
+      <p>We'll let you know the moment Ahead launches.</p>
+    </div>
+
+    <p class="sub-note" id="subNote">Coming soon for iOS</p>
+  </div>
+
+  <script>
+    // ─── CONFIGURATION ───────────────────────────────────────────────
+    // Paste your Google Apps Script Web App URL here:
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1unQJ6nN4dNOAO81VmPV5LK4ejhHOtQ38rdVOi6bU431CKlffxE3xlefSmA16HSidAA/exec';
+    // ─────────────────────────────────────────────────────────────────
+
+    async function handleSubmit() {
+      const email = document.getElementById('emailInput').value.trim();
+      const btn = document.getElementById('submitBtn');
+      const errorText = document.getElementById('errorText');
+
+      errorText.classList.remove('visible');
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('emailInput').style.color = '#e05252';
+        setTimeout(() => document.getElementById('emailInput').style.color = '', 600);
+        return;
+      }
+
+      btn.disabled = true;
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            timestamp: new Date().toISOString(),
+            source: window.location.href
+          })
+        });
+
+        // Show success (no-cors means we can't read response, assume success)
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('subNote').style.display = 'none';
+        document.getElementById('successState').classList.add('visible');
+
+      } catch (e) {
+        btn.disabled = false;
+        errorText.classList.add('visible');
+      }
+    }
+
+    window.addEventListener('load', () => document.getElementById('emailInput').focus());
+
+    document.getElementById('emailInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSubmit();
+    });
+  </script>
+</body>
+</html>
