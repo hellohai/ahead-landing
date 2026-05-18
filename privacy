@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow">
+<title>Privacy Policy — Ahead</title>
+<style>
+  :root{
+    --ink:#1c1b1a;
+    --muted:#5f5d58;
+    --line:#e4e1d8;
+    --bg:#faf8f3;
+    --card:#ffffff;
+    --accent:#5b4ad1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:Georgia,"Times New Roman",serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.7;
+    font-size:18px;
+    padding:0 20px;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:64px 0 96px}
+  header{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:40px}
+  .kicker{
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:12px;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  h1{font-size:38px;line-height:1.15;font-weight:700;letter-spacing:-.01em;margin-bottom:12px}
+  .updated{font-size:14px;color:var(--muted);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+  h2{
+    font-size:22px;
+    font-weight:700;
+    margin:44px 0 14px;
+    letter-spacing:-.005em;
+    padding-top:8px;
+  }
+  h3{font-size:18px;font-weight:700;margin:28px 0 8px}
+  p{margin:0 0 16px}
+  ul{margin:0 0 16px;padding-left:24px}
+  li{margin-bottom:9px}
+  strong{font-weight:700}
+  a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .lead{font-size:20px;color:var(--ink)}
+  .callout{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:6px;
+    padding:20px 22px;
+    margin:24px 0;
+    font-size:17px;
+  }
+  .callout p:last-child{margin-bottom:0}
+  .summary{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:24px 26px;
+    margin:32px 0 8px;
+  }
+  .summary h2{margin-top:0;font-size:18px}
+  .summary ul{margin-bottom:0}
+  footer{
+    margin-top:64px;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-size:14px;
+    color:var(--muted);
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (max-width:560px){
+    body{font-size:17px}
+    .wrap{padding:44px 0 64px}
+    h1{font-size:30px}
+    h2{font-size:20px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Ahead</div>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: 18 May 2026</p>
+</header>
+
+<p class="lead">Ahead is built to respect your privacy. This policy explains, in plain language, what information the app uses, where it goes, and what is — and isn't — done with it.</p>
+
+<div class="summary">
+  <h2>The short version</h2>
+  <ul>
+    <li>Ahead has <strong>no servers that store your data</strong> and <strong>no accounts</strong>. Your information stays on your device.</li>
+    <li>To write your daily summary, the app sends relevant content to <strong>Anthropic's Claude AI</strong> for processing. This happens only with your explicit consent.</li>
+    <li>Anthropic does <strong>not</strong> use this data to train AI models, and deletes it on a short retention window.</li>
+    <li>There is <strong>no analytics, advertising, or tracking</strong> of any kind in Ahead.</li>
+    <li>Your Google and Apple Health data is used <strong>only</strong> to generate your summaries — never sold, never shared for advertising.</li>
+  </ul>
+</div>
+
+<h2>1. Who we are</h2>
+<p>Ahead ("the app") is an independent application developed and published by an individual developer ("we", "us"). For any privacy questions or requests, contact us at the email address listed at the end of this policy.</p>
+
+<h2>2. The information Ahead uses</h2>
+<p>Ahead is a personal daily-summary app. To produce your summary, it accesses the following, only after you grant permission:</p>
+
+<h3>Google account data (via Google Sign-In)</h3>
+<p>If you connect your Google account, Ahead accesses:</p>
+<ul>
+  <li><strong>Google Calendar</strong> — event titles, dates, and times, so your summary can reflect your schedule.</li>
+  <li><strong>Gmail</strong> — the subject lines and short preview snippets of recent unread messages, and the ability to archive or mark messages as read when you tap those actions. Ahead does <strong>not</strong> read full email bodies.</li>
+</ul>
+
+<h3>Apple Health data (via HealthKit)</h3>
+<p>If you grant access, Ahead reads recent health metrics — such as sleep, steps, resting heart rate, and active energy — to include a brief wellness recap in your summary. This data is read on your device and is used solely to generate your summaries.</p>
+
+<h3>Reminders</h3>
+<p>If you grant access, Ahead reads your reminders so they can be reflected in your summary.</p>
+
+<h3>Information you enter</h3>
+<p>Your first name and preferences (such as your typical workday) are stored locally on your device only.</p>
+
+<div class="callout">
+  <p><strong>Where this is stored:</strong> All of the above is processed on your device and stored locally (in the app's on-device storage). Ahead does not operate any database or server that retains your calendar, email, health, reminder, or profile data.</p>
+</div>
+
+<h2>3. How your data is used to generate summaries</h2>
+<p>Ahead's core feature — your daily summary — is written by <strong>Claude</strong>, an AI assistant made by <a href="https://www.anthropic.com" rel="noopener">Anthropic, PBC</a> ("Anthropic"). This is the only situation in which your information leaves your device.</p>
+
+<p>When you generate a summary, the app sends the relevant content (calendar events, email subjects and snippets, reminder titles, and a health summary) to Anthropic's commercial API so Claude can write your summary. The request passes through a lightweight relay service we operate solely to forward the request to Anthropic securely. <strong>This relay does not store or log the content of your requests</strong> — it forwards them and returns Claude's response.</p>
+
+<div class="callout">
+  <p><strong>You are asked to consent to this before it ever happens.</strong> The first time you set up Ahead, the app clearly explains that this data is sent to Anthropic and asks for your explicit agreement. The app will not generate a summary without your consent.</p>
+</div>
+
+<h3>What Anthropic does with it</h3>
+<p>Because Ahead uses Anthropic's commercial API:</p>
+<ul>
+  <li>Your data is <strong>not used to train Anthropic's AI models</strong>.</li>
+  <li>Anthropic deletes API inputs and outputs on a short retention window (currently within approximately 7 days), except where longer retention is required to comply with law or to investigate misuse.</li>
+</ul>
+<p>Anthropic's handling of this data is governed by Anthropic's own privacy policy and commercial terms. You can review Anthropic's practices at <a href="https://www.anthropic.com/legal/privacy" rel="noopener">anthropic.com/legal/privacy</a>.</p>
+
+<h2>4. Google API Services — Limited Use</h2>
+<p>Ahead's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements. Specifically:</p>
+<ul>
+  <li>Google Calendar and Gmail data is used <strong>only</strong> to provide and improve the user-facing features of Ahead (generating your summary and the email actions you explicitly trigger).</li>
+  <li>This data is <strong>not</strong> sold, and is <strong>not</strong> used for advertising.</li>
+  <li>This data is <strong>not</strong> transferred to others except (a) as necessary to provide the summary feature (processing by Anthropic, as described above), (b) for security or legal reasons, or (c) with your explicit consent.</li>
+  <li>Humans do not read this Google data except where required for security, to comply with law, or with your explicit consent.</li>
+</ul>
+
+<h2>5. Apple Health data</h2>
+<p>Health data accessed through HealthKit is used solely to provide the in-app summary feature. In accordance with Apple's requirements, Ahead does <strong>not</strong> use Health data for advertising or marketing, and does <strong>not</strong> sell it or share it with data brokers. Health information is processed to generate your summary as described in Section 3 and is not otherwise stored by us.</p>
+
+<h2>6. Analytics and tracking</h2>
+<p>Ahead contains <strong>no analytics, no crash-reporting SDKs, no advertising, and no third-party tracking</strong>. The app does not build a profile of you and does not track you across apps or websites.</p>
+
+<h2>7. Data retention and deletion</h2>
+<p>Because your data is stored locally on your device, you can remove all of it at any time by deleting the app, or by disconnecting a data source (for example, signing out of Google) within the app. Data sent to Anthropic for summary generation is deleted by Anthropic on the short retention window described in Section 3; we do not retain copies.</p>
+
+<h2>8. Your rights</h2>
+<p>Depending on where you live, you may have rights under laws such as the EU/UK General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA), including the right to access, correct, or delete your personal information, and the right not to be discriminated against for exercising those rights.</p>
+<p>Because Ahead stores your data locally and does not maintain server-side accounts or copies, you can exercise the core of these rights directly: disconnecting a source or deleting the app removes the data. For requests relating to data processed by Anthropic, please also see Anthropic's privacy policy. For any privacy request or question, contact us using the details below.</p>
+
+<h2>9. Children</h2>
+<p>Ahead is not directed to children under 13 (or the equivalent minimum age in your jurisdiction) and we do not knowingly collect their personal information.</p>
+
+<h2>10. Changes to this policy</h2>
+<p>If this policy changes materially, we will update the "Last updated" date above and, where appropriate, provide notice within the app. Continued use of Ahead after changes take effect constitutes acceptance of the revised policy.</p>
+
+<h2>11. Contact</h2>
+<p>For any questions, concerns, or privacy requests regarding Ahead, contact:</p>
+<p><strong>[YOUR CONTACT EMAIL HERE]</strong></p>
+
+<footer>
+  <p>Ahead — Privacy Policy. This page is the canonical privacy policy for the Ahead iOS application.</p>
+</footer>
+
+</div>
+</body>
+</html>
