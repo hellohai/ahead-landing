@@ -722,7 +722,7 @@
   <div class="toast" id="toast"></div>
 
 <script>
-  // ============ CONFIG ============
+    // ============ CONFIG ============
   // Replace with your deployed Worker URL, e.g. "https://kanban-worker.yourname.workers.dev"
   const WORKER_URL = "https://kanban-worker.jamesdarin.workers.dev";
 
@@ -1222,7 +1222,7 @@
       const del = document.createElement('button');
       del.textContent = '×';
       del.className = 'danger';
-      del.style.padding = '0'; del.style.width = '28px';
+      del.style.cssText = 'padding: 0; width: 28px; height: 28px; font-size: 18px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;';
       del.title = 'Delete label';
       del.addEventListener('click', () => {
         if (!confirm(`Delete label "${lbl.name}"? It will be removed from all cards.`)) return;
@@ -1472,4 +1472,6 @@
 
 
 
-  
+
+
+
