@@ -9,6 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
+    /* Theme variables — get overwritten by applyTheme() at runtime.
+       Defaults here are the light theme with hue 230, intensity 30. */
     --bg: #ffffff;
     --bg-2: #fafbfc;
     --bg-3: #f4f5f8;
@@ -27,8 +29,9 @@
     --accent-soft: rgba(94, 106, 210, 0.08);
     --danger: #d93f3f;
     --success: #2f9e6b;
+    --shadow-color: 16, 24, 40;
 
-    /* Label palette — tuned for light backgrounds */
+    /* Label palette — tuned for light backgrounds. Stays constant across themes. */
     --c-red: #c93838;        --c-red-bg: #fce8e8;
     --c-orange: #c46a1c;     --c-orange-bg: #fdeed8;
     --c-yellow: #a87f0a;     --c-yellow-bg: #fbf2cc;
@@ -38,6 +41,19 @@
     --c-violet: #6a47ba;     --c-violet-bg: #e6dff5;
     --c-pink: #b14a8a;       --c-pink-bg: #f7dcec;
     --c-gray: #6b6f76;       --c-gray-bg: #e8eaee;
+  }
+
+  /* Dark-mode label palette (slightly more saturated, darker tinted bgs). */
+  body.theme-dark {
+    --c-red: #f2555a;        --c-red-bg: rgba(242, 85, 90, 0.14);
+    --c-orange: #f2994a;     --c-orange-bg: rgba(242, 153, 74, 0.14);
+    --c-yellow: #f2c94c;     --c-yellow-bg: rgba(242, 201, 76, 0.14);
+    --c-green: #4cb782;      --c-green-bg: rgba(76, 183, 130, 0.14);
+    --c-teal: #4ea7c9;       --c-teal-bg: rgba(78, 167, 201, 0.14);
+    --c-blue: #5e8df2;       --c-blue-bg: rgba(94, 141, 242, 0.14);
+    --c-violet: #8a63d2;     --c-violet-bg: rgba(138, 99, 210, 0.14);
+    --c-pink: #d97ab8;       --c-pink-bg: rgba(217, 122, 184, 0.14);
+    --c-gray: #8a8f98;       --c-gray-bg: rgba(138, 143, 152, 0.14);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -470,6 +486,100 @@
     color: var(--text-4); font-size: 12px; text-align: center;
     padding: 20px 8px; font-style: italic;
   }
+
+  /* ===== Theme switcher ===== */
+  .theme-fab {
+    position: fixed; bottom: 20px; right: 20px; z-index: 90;
+    width: 40px; height: 40px; padding: 0;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(var(--shadow-color), 0.12);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .theme-fab:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(var(--shadow-color), 0.18);
+    background: var(--surface);
+    border-color: var(--border-2);
+  }
+  .theme-fab svg { width: 18px; height: 18px; color: var(--text-2); }
+
+  .theme-panel {
+    position: fixed; bottom: 72px; right: 20px; z-index: 95;
+    width: 280px; padding: 16px;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 10px;
+    box-shadow: 0 16px 40px rgba(var(--shadow-color), 0.18), 0 4px 12px rgba(var(--shadow-color), 0.08);
+    display: none;
+    animation: pop 0.15s ease;
+  }
+  .theme-panel.open { display: block; }
+  .theme-panel h3 {
+    font-size: 13px; font-weight: 600; margin-bottom: 12px;
+    color: var(--text);
+  }
+  .theme-toggle {
+    display: flex; background: var(--bg-3); padding: 3px;
+    border-radius: 7px; margin-bottom: 16px;
+  }
+  .theme-toggle button {
+    flex: 1; height: 28px; border: none; background: transparent;
+    color: var(--text-3); font-size: 12px; font-weight: 500;
+    border-radius: 5px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.12s ease;
+  }
+  .theme-toggle button:hover { color: var(--text); background: transparent; }
+  .theme-toggle button.active {
+    background: var(--surface); color: var(--text);
+    box-shadow: 0 1px 2px rgba(var(--shadow-color), 0.08);
+  }
+  .theme-toggle svg { width: 13px; height: 13px; }
+
+  .slider-row { margin-bottom: 14px; }
+  .slider-row:last-child { margin-bottom: 0; }
+  .slider-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-3); font-weight: 500;
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .slider-label .value {
+    color: var(--text); font-variant-numeric: tabular-nums;
+    text-transform: none; letter-spacing: 0;
+  }
+  .slider {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; border-radius: 3px;
+    background: var(--bg-3); outline: none; cursor: pointer;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--accent);
+    cursor: pointer; transition: transform 0.1s ease;
+    box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.18);
+  }
+  .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .slider::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--accent);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.18);
+  }
+  /* Hue slider — rainbow track */
+  .slider.hue {
+    background: linear-gradient(to right,
+      hsl(0, 70%, 50%), hsl(60, 70%, 50%), hsl(120, 70%, 50%),
+      hsl(180, 70%, 50%), hsl(240, 70%, 50%), hsl(300, 70%, 50%), hsl(360, 70%, 50%));
+  }
+  .theme-panel .reset {
+    display: block; width: 100%; margin-top: 12px;
+    background: transparent; border-color: var(--border);
+    color: var(--text-3); font-size: 11px; height: 26px;
+  }
+  .theme-panel .reset:hover { color: var(--text); }
 </style>
 </head>
 <body>
@@ -579,6 +689,36 @@
     </div>
   </div>
 
+  <!-- Theme switcher -->
+  <button class="theme-fab" id="themeFab" title="Theme settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 3a9 9 0 0 0 0 18 4.5 4.5 0 0 1 0-9 4.5 4.5 0 0 0 0-9z" fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="theme-panel" id="themePanel">
+    <h3>Theme</h3>
+    <div class="theme-toggle" id="themeToggle">
+      <button data-mode="light" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        Light
+      </button>
+      <button data-mode="dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        Dark
+      </button>
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span>Hue</span><span class="value" id="hueValue">230°</span></div>
+      <input type="range" class="slider hue" id="hueSlider" min="0" max="360" value="230">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span>Intensity</span><span class="value" id="intensityValue">30%</span></div>
+      <input type="range" class="slider" id="intensitySlider" min="0" max="100" value="30">
+    </div>
+    <button class="reset" id="themeReset">Reset to defaults</button>
+  </div>
+
   <div class="toast" id="toast"></div>
 
 <script>
@@ -587,6 +727,104 @@
   const WORKER_URL = "https://kanban-worker.jamesdarin.workers.dev";
 
   const COLORS = ["red", "orange", "yellow", "green", "teal", "blue", "violet", "pink", "gray"];
+
+  // ============ THEME ============
+  const THEME_KEY = "kanban_theme_v1";
+  const THEME_DEFAULTS = { mode: "light", hue: 230, intensity: 30 };
+  let theme = loadTheme();
+
+  function loadTheme() {
+    try {
+      const raw = localStorage.getItem(THEME_KEY);
+      if (raw) {
+        const t = JSON.parse(raw);
+        return {
+          mode: t.mode === "dark" ? "dark" : "light",
+          hue: clamp(parseInt(t.hue, 10), 0, 360, 230),
+          intensity: clamp(parseInt(t.intensity, 10), 0, 100, 30)
+        };
+      }
+    } catch (e) {}
+    return { ...THEME_DEFAULTS };
+  }
+  function saveTheme() {
+    try { localStorage.setItem(THEME_KEY, JSON.stringify(theme)); } catch (e) {}
+  }
+  function clamp(n, lo, hi, fallback) {
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(hi, Math.max(lo, n));
+  }
+
+  // Generate the full theme from (mode, hue, intensity) and write CSS vars.
+  // intensity 0 = neutral gray UI; 100 = strongly tinted with the hue.
+  function applyTheme() {
+    const root = document.documentElement;
+    const isDark = theme.mode === "dark";
+    document.body.classList.toggle("theme-dark", isDark);
+    document.body.classList.toggle("theme-light", !isDark);
+
+    const h = theme.hue;
+    const s = theme.intensity; // 0–100, sat % for backgrounds
+    const accentSat = 60 + s * 0.25; // accent is always reasonably saturated
+    const accentLight = isDark ? 65 : 58;
+    const accentHoverLight = isDark ? 72 : 50;
+
+    // Background ramp — very subtle saturation tied to intensity
+    const bgSat = s * 0.18;  // bg saturation: 0–18%
+    const bgSat2 = s * 0.12; // less-saturated cousin for borders/text
+
+    let v;
+    if (isDark) {
+      v = {
+        '--bg':            hsl(h, bgSat, 4),
+        '--bg-2':          hsl(h, bgSat, 6),
+        '--bg-3':          hsl(h, bgSat, 9),
+        '--bg-hover':      hsl(h, bgSat, 11),
+        '--surface':       hsl(h, bgSat, 6.5),
+        '--surface-2':     hsl(h, bgSat, 9.5),
+        '--border':        hsl(h, bgSat2, 14),
+        '--border-2':      hsl(h, bgSat2, 18),
+        '--border-strong': hsl(h, bgSat2, 25),
+        '--text':          hsl(h, bgSat2, 97),
+        '--text-2':        hsl(h, bgSat2, 73),
+        '--text-3':        hsl(h, bgSat2, 56),
+        '--text-4':        hsl(h, bgSat2, 40),
+        '--shadow-color':  '0, 0, 0',
+      };
+    } else {
+      v = {
+        '--bg':            hsl(h, bgSat * 0.5, 100),
+        '--bg-2':          hsl(h, bgSat, 98.5),
+        '--bg-3':          hsl(h, bgSat, 96),
+        '--bg-hover':      hsl(h, bgSat, 93),
+        '--surface':       hsl(h, bgSat * 0.5, 100),
+        '--surface-2':     hsl(h, bgSat, 97.5),
+        '--border':        hsl(h, bgSat2, 90),
+        '--border-2':      hsl(h, bgSat2, 84),
+        '--border-strong': hsl(h, bgSat2, 70),
+        '--text':          hsl(h, bgSat2, 11),
+        '--text-2':        hsl(h, bgSat2, 28),
+        '--text-3':        hsl(h, bgSat2, 45),
+        '--text-4':        hsl(h, bgSat2, 62),
+        '--shadow-color':  '16, 24, 40',
+      };
+    }
+    v['--accent']        = `hsl(${h}, ${accentSat}%, ${accentLight}%)`;
+    v['--accent-hover']  = `hsl(${h}, ${accentSat}%, ${accentHoverLight}%)`;
+    v['--accent-soft']   = `hsla(${h}, ${accentSat}%, ${accentLight}%, ${isDark ? 0.16 : 0.10})`;
+    v['--danger']        = isDark ? '#eb5757' : '#d93f3f';
+    v['--success']       = isDark ? '#4cb782' : '#2f9e6b';
+
+    for (const [k, val] of Object.entries(v)) root.style.setProperty(k, val);
+
+    // Update UI controls
+    document.getElementById('hueValue').textContent = h + '°';
+    document.getElementById('intensityValue').textContent = s + '%';
+    document.querySelectorAll('#themeToggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === theme.mode);
+    });
+  }
+  function hsl(h, s, l) { return `hsl(${h}, ${s}%, ${l}%)`; }
 
   // ============ STATE ============
   let state = {
@@ -1186,9 +1424,52 @@
     });
   });
 
+  // ============ THEME SWITCHER UI ============
+  const themeFab = document.getElementById('themeFab');
+  const themePanel = document.getElementById('themePanel');
+  themeFab.addEventListener('click', (e) => {
+    e.stopPropagation();
+    themePanel.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (themePanel.classList.contains('open')
+        && !themePanel.contains(e.target)
+        && !themeFab.contains(e.target)) {
+      themePanel.classList.remove('open');
+    }
+  });
+  document.querySelectorAll('#themeToggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      theme.mode = btn.dataset.mode;
+      applyTheme(); saveTheme();
+    });
+  });
+  document.getElementById('hueSlider').addEventListener('input', (e) => {
+    theme.hue = parseInt(e.target.value, 10);
+    applyTheme(); saveTheme();
+  });
+  document.getElementById('intensitySlider').addEventListener('input', (e) => {
+    theme.intensity = parseInt(e.target.value, 10);
+    applyTheme(); saveTheme();
+  });
+  document.getElementById('themeReset').addEventListener('click', () => {
+    theme = { ...THEME_DEFAULTS };
+    document.getElementById('hueSlider').value = theme.hue;
+    document.getElementById('intensitySlider').value = theme.intensity;
+    applyTheme(); saveTheme();
+  });
+  // Sync slider positions to loaded theme
+  document.getElementById('hueSlider').value = theme.hue;
+  document.getElementById('intensitySlider').value = theme.intensity;
+  applyTheme();
+
   // ============ INIT ============
   setupDropZones();
   fetchState();
 </script>
 </body>
 </html>
+
+
+
+  
