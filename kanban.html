@@ -6,267 +6,575 @@
 <title>Bugs & Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #f4f1ea;
-    --paper-2: #ebe6da;
-    --ink: #1a1814;
-    --ink-soft: #4a4540;
-    --ink-faded: #8a8278;
-    --accent: #c8412b;
-    --rule: #d4cdbf;
-    --card-bg: #fbf8f1;
-    --col-bug: #c8412b;
-    --col-todo: #2b5fc8;
-    --col-done: #4a7c4a;
+    --bg: #ffffff;
+    --bg-2: #fafbfc;
+    --bg-3: #f4f5f8;
+    --bg-hover: #eef0f3;
+    --surface: #ffffff;
+    --surface-2: #f7f8fa;
+    --border: #e6e8ec;
+    --border-2: #d6d9df;
+    --border-strong: #b8bcc4;
+    --text: #1a1c1f;
+    --text-2: #44474d;
+    --text-3: #6b6f76;
+    --text-4: #9499a0;
+    --accent: #5e6ad2;
+    --accent-hover: #4f5bc8;
+    --accent-soft: rgba(94, 106, 210, 0.08);
+    --danger: #d93f3f;
+    --success: #2f9e6b;
+
+    /* Label palette — tuned for light backgrounds */
+    --c-red: #c93838;        --c-red-bg: #fce8e8;
+    --c-orange: #c46a1c;     --c-orange-bg: #fdeed8;
+    --c-yellow: #a87f0a;     --c-yellow-bg: #fbf2cc;
+    --c-green: #1f8a5c;      --c-green-bg: #d8f0e3;
+    --c-teal: #267d97;       --c-teal-bg: #d6ecf2;
+    --c-blue: #2f6ad9;       --c-blue-bg: #dde8fb;
+    --c-violet: #6a47ba;     --c-violet-bg: #e6dff5;
+    --c-pink: #b14a8a;       --c-pink-bg: #f7dcec;
+    --c-gray: #6b6f76;       --c-gray-bg: #e8eaee;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100vh; }
-  body {
-    background: var(--paper);
-    background-image:
-      radial-gradient(circle at 20% 10%, rgba(200, 65, 43, 0.04) 0%, transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(43, 95, 200, 0.03) 0%, transparent 40%),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    color: var(--ink);
-    font-family: 'Inter', -apple-system, sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-    padding: 48px 32px 80px;
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    font-feature-settings: "cv11", "ss01", "ss03";
   }
-  .container { max-width: 1400px; margin: 0 auto; }
+
+  body { padding: 24px 28px 80px; }
+  .container { max-width: 1600px; margin: 0 auto; }
+
+  /* ===== Header ===== */
   header {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    border-bottom: 1px solid var(--ink); padding-bottom: 24px; margin-bottom: 40px;
-    flex-wrap: wrap; gap: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
   }
-  .title-block { flex: 1; min-width: 280px; }
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.18em;
-    color: var(--ink-faded); margin-bottom: 12px;
-    display: flex; align-items: center; gap: 12px;
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-3); font-size: 13px; font-weight: 450;
   }
-  .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-  h1 {
-    font-family: 'Fraunces', serif; font-weight: 800;
-    font-size: clamp(48px, 7vw, 88px); line-height: 0.95;
-    letter-spacing: -0.03em; font-variation-settings: "opsz" 144;
+  .breadcrumb .sep { color: var(--text-4); }
+  .breadcrumb .current { color: var(--text); font-weight: 500; }
+  .breadcrumb .icon {
+    width: 16px; height: 16px; border-radius: 4px;
+    background: var(--accent); display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: #fff;
   }
-  h1 .amp { font-style: italic; font-weight: 400; color: var(--accent); }
-  .meta { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft); }
-  .meta .row { display: flex; gap: 16px; justify-content: flex-end; margin-bottom: 6px; }
-  .meta .label { color: var(--ink-faded); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-3); font-weight: 450;
+    padding: 4px 10px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--surface);
+  }
   .status-dot {
-    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--ink-faded); margin-right: 6px; vertical-align: middle;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-4);
   }
-  .status-dot.live { background: var(--col-done); box-shadow: 0 0 0 3px rgba(74, 124, 74, 0.2); animation: pulse 2s infinite; }
-  .status-dot.editing { background: var(--accent); box-shadow: 0 0 0 3px rgba(200, 65, 43, 0.2); }
-  .status-dot.loading { background: var(--ink-faded); animation: pulse 1s infinite; }
-  .status-dot.error { background: var(--accent); }
+  .status-dot.live { background: var(--success); box-shadow: 0 0 0 3px rgba(76, 183, 130, 0.15); }
+  .status-dot.editing { background: var(--accent); box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.2); }
+  .status-dot.loading { background: var(--text-3); animation: pulse 1s infinite; }
+  .status-dot.error { background: var(--danger); }
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(74, 124, 74, 0.2); }
-    50% { box-shadow: 0 0 0 6px rgba(74, 124, 74, 0); }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
+
+  /* ===== Title row ===== */
+  .title-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 4px; gap: 16px; flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-3); font-size: 13px; font-weight: 450;
+    margin-bottom: 20px;
+  }
+
+  /* ===== Tabs (visual only) ===== */
+  .tabs {
+    display: flex; gap: 4px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 8px 12px; font-size: 13px; font-weight: 500;
+    color: var(--text-3); border-bottom: 1px solid transparent;
+    margin-bottom: -1px; cursor: default;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  /* ===== Toolbar ===== */
   .toolbar {
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 32px; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 16px; gap: 12px; flex-wrap: wrap;
   }
-  .toolbar-left { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft); }
-  .toolbar-left .count { color: var(--ink); font-weight: 600; }
-  .toolbar-right { display: flex; gap: 10px; }
+  .toolbar-left {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--text-3); font-weight: 450;
+  }
+  .toolbar-left .count { color: var(--text-2); }
+  .toolbar-right { display: flex; gap: 8px; }
+
   button {
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
-    padding: 10px 18px; border: 1px solid var(--ink);
-    background: transparent; color: var(--ink); cursor: pointer;
-    transition: all 0.15s ease; border-radius: 0;
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    padding: 6px 12px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-2);
+    cursor: pointer; transition: all 0.12s ease;
+    border-radius: 6px; height: 28px;
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
   }
-  button:hover { background: var(--ink); color: var(--paper); }
-  button.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-  button.primary:hover { background: var(--ink); border-color: var(--ink); }
-  button.ghost { border-color: var(--rule); color: var(--ink-soft); }
-  button.ghost:hover { background: var(--paper-2); color: var(--ink); border-color: var(--ink-soft); }
+  button:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-2); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+  button.ghost { background: transparent; border-color: transparent; }
+  button.ghost:hover { background: var(--bg-hover); }
+  button.danger { color: var(--danger); }
+  button.danger:hover { background: #fce8e8; border-color: #f3c2c2; color: var(--danger); }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button:disabled:hover { background: transparent; color: var(--ink); }
-  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  @media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
+  button:disabled:hover { background: var(--surface); color: var(--text-2); border-color: var(--border); }
+
+  /* ===== Board ===== */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 1000px) { .board { grid-template-columns: 1fr; } }
+
   .column {
-    background: var(--card-bg); border: 1px solid var(--rule);
-    min-height: 500px; display: flex; flex-direction: column; position: relative;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 400px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
   }
   .column-header {
-    padding: 20px 22px 16px; border-bottom: 1px solid var(--rule);
-    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-2); position: sticky; top: 0; z-index: 2;
+  }
+  .col-status-icon {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid currentColor; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .column[data-col="bugs"] .col-status-icon { color: var(--c-gray); }
+  .column[data-col="roadmap"] .col-status-icon {
+    color: var(--c-yellow);
+    background: conic-gradient(var(--c-yellow) 50%, transparent 50%);
+    border-color: var(--c-yellow);
+  }
+  .column[data-col="completed"] .col-status-icon {
+    color: var(--c-violet); background: var(--c-violet); border-color: var(--c-violet);
+  }
+  .column[data-col="completed"] .col-status-icon::after {
+    content: ''; position: absolute; width: 5px; height: 3px;
+    border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    transform: rotate(-45deg); top: 2.5px; left: 2.5px;
   }
   .column-title {
-    font-family: 'Fraunces', serif; font-weight: 600;
-    font-size: 22px; letter-spacing: -0.01em;
-    display: flex; align-items: baseline; gap: 10px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    letter-spacing: -0.005em;
   }
-  .column-tag {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
-    text-transform: uppercase; letter-spacing: 0.15em;
-    padding: 3px 7px; border-radius: 2px; color: var(--paper);
-    font-weight: 600; transform: translateY(-3px);
+  .column-count {
+    font-size: 12px; color: var(--text-4); font-weight: 450;
+    margin-left: 2px;
   }
-  .column[data-col="bugs"] .column-tag { background: var(--col-bug); }
-  .column[data-col="roadmap"] .column-tag { background: var(--col-todo); }
-  .column[data-col="completed"] .column-tag { background: var(--col-done); }
-  .column-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-faded); }
-  .cards { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 100px; }
+  .column-actions { margin-left: auto; display: flex; gap: 2px; }
+  .column-actions button {
+    width: 22px; height: 22px; padding: 0; border: none;
+    background: transparent; color: var(--text-3);
+    border-radius: 4px; font-size: 14px;
+    display: none; align-items: center; justify-content: center;
+  }
+  .editing .column-actions button { display: inline-flex; }
+  .column-actions button:hover { background: var(--bg-hover); color: var(--text); }
+
+  .cards {
+    padding: 8px; display: flex; flex-direction: column; gap: 6px;
+    flex: 1; min-height: 80px;
+  }
+  .cards.drag-over { background: var(--bg-3); }
+
+  /* ===== Card ===== */
   .card {
-    background: var(--paper); border: 1px solid var(--rule);
-    padding: 14px 16px; font-size: 14px; line-height: 1.45;
-    color: var(--ink); position: relative; transition: all 0.15s ease;
-    cursor: default; word-break: break-word;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: default;
+    position: relative;
+    transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
+  }
+  .card:hover {
+    border-color: var(--border-2);
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.06);
   }
   .editing .card { cursor: grab; }
-  .editing .card:hover {
-    border-color: var(--ink); box-shadow: 2px 2px 0 var(--ink);
-    transform: translate(-1px, -1px);
+  .editing .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.3; }
+
+  .card-id {
+    font-size: 11px; color: var(--text-4); font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 4px;
   }
-  .card.dragging { opacity: 0.4; cursor: grabbing; }
-  .card-actions { position: absolute; top: 8px; right: 8px; display: none; gap: 4px; }
+  .card-id-icon {
+    width: 12px; height: 12px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .column[data-col="bugs"] .card-id-icon {
+    border: 1.5px solid var(--c-gray);
+  }
+  .column[data-col="roadmap"] .card-id-icon {
+    background: conic-gradient(var(--c-yellow) 50%, transparent 50%);
+    border: 1.5px solid var(--c-yellow);
+  }
+  .column[data-col="completed"] .card-id-icon {
+    background: var(--c-violet); border: 1.5px solid var(--c-violet);
+    position: relative;
+  }
+  .column[data-col="completed"] .card-id-icon::after {
+    content: ''; position: absolute; width: 4px; height: 2.5px;
+    border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    transform: rotate(-45deg); top: 2.5px; left: 2px;
+  }
+
+  .card-title {
+    font-size: 13px; font-weight: 450; color: var(--text);
+    line-height: 1.4; word-break: break-word;
+  }
+  .card-title[contenteditable="true"] {
+    outline: none; background: var(--bg-3);
+    padding: 2px 4px; margin: -2px -4px;
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px var(--accent);
+    cursor: text;
+  }
+
+  .card-labels {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+  }
+  .label-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 7px 2px 6px; border-radius: 10px;
+    font-size: 11px; font-weight: 500;
+    background: var(--c-gray-bg); color: var(--c-gray);
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .label-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  /* color variants */
+  .label-pill[data-color="red"]    { background: var(--c-red-bg);    color: var(--c-red); }
+  .label-pill[data-color="orange"] { background: var(--c-orange-bg); color: var(--c-orange); }
+  .label-pill[data-color="yellow"] { background: var(--c-yellow-bg); color: var(--c-yellow); }
+  .label-pill[data-color="green"]  { background: var(--c-green-bg);  color: var(--c-green); }
+  .label-pill[data-color="teal"]   { background: var(--c-teal-bg);   color: var(--c-teal); }
+  .label-pill[data-color="blue"]   { background: var(--c-blue-bg);   color: var(--c-blue); }
+  .label-pill[data-color="violet"] { background: var(--c-violet-bg); color: var(--c-violet); }
+  .label-pill[data-color="pink"]   { background: var(--c-pink-bg);   color: var(--c-pink); }
+  .label-pill[data-color="gray"]   { background: var(--c-gray-bg);   color: var(--c-gray); }
+
+  .card-actions {
+    position: absolute; top: 6px; right: 6px;
+    display: none; gap: 2px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-2); border-radius: 5px;
+    padding: 2px;
+  }
   .editing .card:hover .card-actions { display: flex; }
   .card-actions button {
-    padding: 4px 6px; font-size: 10px;
-    border: 1px solid var(--rule); background: var(--card-bg); line-height: 1;
+    width: 22px; height: 22px; padding: 0; border: none;
+    background: transparent; color: var(--text-3); border-radius: 3px;
+    font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
   }
-  .card-actions button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .card-actions .del:hover { background: var(--accent); border-color: var(--accent); }
-  .cards.drag-over { background: var(--paper-2); }
+  .card-actions button:hover { background: var(--bg-hover); color: var(--text); }
+  .card-actions button.del:hover { background: #fce8e8; color: var(--danger); }
+
+  /* Add card */
   .add-card {
-    border: 1px dashed var(--rule); padding: 12px; text-align: center;
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    color: var(--ink-faded); cursor: pointer; text-transform: uppercase;
-    letter-spacing: 0.1em; background: transparent; width: 100%;
-    transition: all 0.15s ease; display: none;
+    display: none;
+    width: 100%; padding: 8px 12px;
+    border: 1px dashed var(--border-2);
+    background: transparent; color: var(--text-3);
+    font-size: 12px; font-weight: 500;
+    border-radius: 6px; cursor: pointer;
+    transition: all 0.12s ease;
+    margin-top: 4px;
+    text-align: left;
   }
-  .add-card:hover { border-color: var(--ink); color: var(--ink); background: var(--paper-2); }
+  .add-card:hover { background: var(--bg-hover); color: var(--text-2); border-color: var(--border-strong); }
   .editing .add-card { display: block; }
-  .card-text[contenteditable="true"] {
-    outline: 2px solid var(--accent); outline-offset: -1px;
-    background: #fff; cursor: text;
-  }
+
+  /* ===== Modal / popover ===== */
   .modal-overlay {
-    position: fixed; inset: 0; background: rgba(26, 24, 20, 0.55);
+    position: fixed; inset: 0; background: rgba(16, 24, 40, 0.32);
     display: none; align-items: center; justify-content: center;
     z-index: 100; backdrop-filter: blur(4px);
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--paper); border: 1px solid var(--ink); padding: 36px;
-    width: min(420px, 90vw); box-shadow: 8px 8px 0 var(--ink);
-    animation: pop 0.2s ease;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px;
+    width: min(440px, 92vw);
+    box-shadow: 0 16px 48px rgba(16, 24, 40, 0.16), 0 4px 12px rgba(16, 24, 40, 0.08);
+    animation: pop 0.15s ease;
   }
   @keyframes pop {
-    from { transform: translate(8px, 8px) scale(0.98); opacity: 0; }
-    to { transform: translate(0, 0) scale(1); opacity: 1; }
+    from { transform: translateY(6px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
   }
   .modal h2 {
-    font-family: 'Fraunces', serif; font-weight: 600;
-    font-size: 28px; margin-bottom: 8px; letter-spacing: -0.01em;
+    font-size: 15px; font-weight: 600; margin-bottom: 4px;
   }
-  .modal p { color: var(--ink-soft); font-size: 13px; margin-bottom: 24px; }
-  .modal input {
-    width: 100%; padding: 14px 16px; border: 1px solid var(--ink);
-    background: #fff; font-family: 'JetBrains Mono', monospace;
-    font-size: 14px; margin-bottom: 16px; color: var(--ink); border-radius: 0;
+  .modal p {
+    color: var(--text-3); font-size: 13px; margin-bottom: 18px;
   }
-  .modal input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-input {
+    width: 100%; padding: 8px 10px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-size: 13px; font-family: inherit;
+    border-radius: 6px; margin-bottom: 8px;
+    transition: border-color 0.12s ease;
+  }
+  .modal-input:focus { outline: none; border-color: var(--accent); }
+  .modal-actions {
+    display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;
+  }
   .error-msg {
-    color: var(--accent); font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-    margin-bottom: 12px; min-height: 14px;
+    color: var(--danger); font-size: 12px; min-height: 16px;
+    margin-bottom: 10px;
   }
+
+  /* ===== Label manager ===== */
+  .label-manager { max-height: 60vh; overflow-y: auto; margin: -4px 0 8px; }
+  .label-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 4px; border-radius: 6px;
+  }
+  .label-row:hover { background: var(--bg-3); }
+  .color-swatch {
+    width: 18px; height: 18px; border-radius: 50%;
+    cursor: pointer; flex-shrink: 0;
+    border: 2px solid transparent;
+    transition: transform 0.1s ease;
+  }
+  .color-swatch:hover { transform: scale(1.1); }
+  .color-swatch.active { border-color: var(--text); }
+  .color-swatch[data-color="red"]    { background: var(--c-red); }
+  .color-swatch[data-color="orange"] { background: var(--c-orange); }
+  .color-swatch[data-color="yellow"] { background: var(--c-yellow); }
+  .color-swatch[data-color="green"]  { background: var(--c-green); }
+  .color-swatch[data-color="teal"]   { background: var(--c-teal); }
+  .color-swatch[data-color="blue"]   { background: var(--c-blue); }
+  .color-swatch[data-color="violet"] { background: var(--c-violet); }
+  .color-swatch[data-color="pink"]   { background: var(--c-pink); }
+  .color-swatch[data-color="gray"]   { background: var(--c-gray); }
+
+  .label-name-input {
+    flex: 1; padding: 5px 8px; background: var(--bg);
+    border: 1px solid var(--border); color: var(--text);
+    font-size: 12px; font-family: inherit; border-radius: 5px;
+  }
+  .label-name-input:focus { outline: none; border-color: var(--accent); }
+  .color-picker {
+    display: flex; gap: 4px; padding: 6px;
+    background: var(--bg-3); border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  /* ===== Card label picker (popover on card) ===== */
+  .label-picker {
+    position: absolute; z-index: 50;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 8px; padding: 6px;
+    box-shadow: 0 12px 24px rgba(16, 24, 40, 0.12), 0 2px 6px rgba(16, 24, 40, 0.06);
+    min-width: 200px; max-height: 280px; overflow-y: auto;
+  }
+  .label-picker-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 8px; border-radius: 5px; cursor: pointer;
+    font-size: 12px; color: var(--text-2);
+    user-select: none;
+  }
+  .label-picker-item:hover { background: var(--bg-hover); color: var(--text); }
+  .label-picker-item.selected { background: var(--accent-soft); }
+  .label-picker-item .check { margin-left: auto; color: var(--accent); opacity: 0; font-size: 13px; }
+  .label-picker-item.selected .check { opacity: 1; }
+  .label-picker-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .label-picker-dot[data-color="red"]    { background: var(--c-red); }
+  .label-picker-dot[data-color="orange"] { background: var(--c-orange); }
+  .label-picker-dot[data-color="yellow"] { background: var(--c-yellow); }
+  .label-picker-dot[data-color="green"]  { background: var(--c-green); }
+  .label-picker-dot[data-color="teal"]   { background: var(--c-teal); }
+  .label-picker-dot[data-color="blue"]   { background: var(--c-blue); }
+  .label-picker-dot[data-color="violet"] { background: var(--c-violet); }
+  .label-picker-dot[data-color="pink"]   { background: var(--c-pink); }
+  .label-picker-dot[data-color="gray"]   { background: var(--c-gray); }
+
+  /* ===== Toast ===== */
   .toast {
-    position: fixed; bottom: 32px; left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--ink); color: var(--paper); padding: 12px 20px;
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    opacity: 0; transition: all 0.25s ease; pointer-events: none; z-index: 200;
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    background: #1a1c1f; color: #ffffff;
+    padding: 8px 14px; font-size: 12px; font-weight: 500;
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(16, 24, 40, 0.16);
+    opacity: 0; transition: all 0.2s ease;
+    pointer-events: none; z-index: 200;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.error { background: var(--accent); }
-  footer {
-    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--rule);
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    color: var(--ink-faded); display: flex; justify-content: space-between;
-    flex-wrap: wrap; gap: 8px;
+  .toast.error { background: var(--danger); }
+
+  /* ===== Misc ===== */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  .empty-col {
+    color: var(--text-4); font-size: 12px; text-align: center;
+    padding: 20px 8px; font-style: italic;
   }
 </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="title-block">
-        <div class="eyebrow">Internal · Project Status · v1</div>
-        <h1>Bugs <span class="amp">&amp;</span> Roadmap</h1>
+      <div class="breadcrumb">
+        <span class="icon">B</span>
+        <span>Workspace</span>
+        <span class="sep">/</span>
+        <span class="current">Bugs &amp; Roadmap</span>
       </div>
-      <div class="meta">
-        <div class="row"><span class="label">Mode</span><span id="modeIndicator"><span class="status-dot loading"></span>Loading…</span></div>
-        <div class="row"><span class="label">Last saved</span><span id="lastSaved">—</span></div>
+      <div class="header-right">
+        <div class="status-pill" id="modeIndicator">
+          <span class="status-dot loading"></span>
+          <span>Loading…</span>
+        </div>
       </div>
     </header>
 
+    <div class="title-row">
+      <h1>Bugs &amp; Roadmap</h1>
+    </div>
+    <div class="subtitle">Track known issues, what's on the roadmap, and what's shipped.</div>
+
+    <div class="tabs">
+      <div class="tab active">Board</div>
+    </div>
+
     <div class="toolbar">
       <div class="toolbar-left">
-        <span class="count" id="totalCount">0</span> items tracked
+        <span><span class="count" id="totalCount">0</span> items</span>
+        <span>·</span>
+        <span><span id="lastSaved">never</span></span>
       </div>
       <div class="toolbar-right">
-        <button id="editBtn" class="primary">Edit</button>
-        <button id="saveBtn" style="display:none">Save</button>
-        <button id="cancelBtn" class="ghost" style="display:none">Cancel</button>
+        <button id="manageLabelsBtn" style="display:none">Manage labels</button>
+        <button id="cancelBtn" style="display:none">Cancel</button>
+        <button id="saveBtn" class="primary" style="display:none">Save changes</button>
+        <button id="editBtn" class="primary">Edit board</button>
       </div>
     </div>
 
     <div class="board" id="board">
       <div class="column" data-col="bugs">
         <div class="column-header">
-          <div class="column-title">Known bugs <span class="column-tag">Bug</span></div>
-          <div class="column-count" data-count-for="bugs">0</div>
+          <span class="col-status-icon"></span>
+          <span class="column-title">Known bugs</span>
+          <span class="column-count" data-count-for="bugs">0</span>
+          <div class="column-actions">
+            <button class="add-here" title="Add card" data-add="bugs">+</button>
+          </div>
         </div>
         <div class="cards" data-col="bugs"></div>
         <button class="add-card" data-add="bugs">+ Add card</button>
       </div>
       <div class="column" data-col="roadmap">
         <div class="column-header">
-          <div class="column-title">Roadmap <span class="column-tag">Todo</span></div>
-          <div class="column-count" data-count-for="roadmap">0</div>
+          <span class="col-status-icon"></span>
+          <span class="column-title">Roadmap</span>
+          <span class="column-count" data-count-for="roadmap">0</span>
+          <div class="column-actions">
+            <button class="add-here" title="Add card" data-add="roadmap">+</button>
+          </div>
         </div>
         <div class="cards" data-col="roadmap"></div>
         <button class="add-card" data-add="roadmap">+ Add card</button>
       </div>
       <div class="column" data-col="completed">
         <div class="column-header">
-          <div class="column-title">Completed <span class="column-tag">Done</span></div>
-          <div class="column-count" data-count-for="completed">0</div>
+          <span class="col-status-icon"></span>
+          <span class="column-title">Completed</span>
+          <span class="column-count" data-count-for="completed">0</span>
+          <div class="column-actions">
+            <button class="add-here" title="Add card" data-add="completed">+</button>
+          </div>
         </div>
         <div class="cards" data-col="completed"></div>
         <button class="add-card" data-add="completed">+ Add card</button>
       </div>
     </div>
-
-    <footer>
-      <span>State synced via Cloudflare Worker</span>
-      <span id="footerStatus">—</span>
-    </footer>
   </div>
 
-  <div class="modal-overlay" id="modal">
+  <!-- Password modal -->
+  <div class="modal-overlay" id="pwModal">
     <div class="modal">
       <h2>Enter password</h2>
       <p>Editing is protected. Enter the password to make changes.</p>
-      <input type="password" id="pwInput" placeholder="Password" autocomplete="off">
+      <input type="password" id="pwInput" class="modal-input" placeholder="Password" autocomplete="off">
       <div class="error-msg" id="pwError"></div>
       <div class="modal-actions">
-        <button class="ghost" id="pwCancel">Cancel</button>
-        <button class="primary" id="pwSubmit">Unlock</button>
+        <button id="pwCancel">Cancel</button>
+        <button id="pwSubmit" class="primary">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Label manager modal -->
+  <div class="modal-overlay" id="labelModal">
+    <div class="modal" style="width: min(500px, 92vw);">
+      <h2>Manage labels</h2>
+      <p>Add, rename, recolor, or delete labels. Changes apply when you save.</p>
+      <div class="label-manager" id="labelManager"></div>
+      <button id="addLabelBtn" style="width: 100%; justify-content: center;">+ Add label</button>
+      <div class="modal-actions">
+        <button id="labelDone" class="primary">Done</button>
       </div>
     </div>
   </div>
@@ -275,16 +583,23 @@
 
 <script>
   // ============ CONFIG ============
-  // Replace with your deployed Worker URL.
-  // Example: "https://kanban-worker.yourname.workers.dev"
+  // Replace with your deployed Worker URL, e.g. "https://kanban-worker.yourname.workers.dev"
   const WORKER_URL = "https://kanban-worker.jamesdarin.workers.dev";
 
+  const COLORS = ["red", "orange", "yellow", "green", "teal", "blue", "violet", "pink", "gray"];
+
   // ============ STATE ============
-  let state = { bugs: [], roadmap: [], completed: [], savedAt: null };
+  let state = {
+    labels: [],
+    columns: { bugs: [], roadmap: [], completed: [] },
+    nextCardId: 1,
+    savedAt: null
+  };
   let isEditing = false;
   let stateBeforeEdit = null;
   let editPassword = null;
   let draggedCard = null;
+  let openPicker = null;
 
   // ============ API ============
   async function fetchState() {
@@ -318,101 +633,262 @@
 
   function normalize(s) {
     if (!s || typeof s !== 'object') s = {};
+    const labels = Array.isArray(s.labels) ? s.labels.map(l => ({
+      id: String(l.id || ''),
+      name: String(l.name || 'Untitled'),
+      color: COLORS.includes(l.color) ? l.color : 'gray'
+    })).filter(l => l.id) : [];
+    const cols = s.columns && typeof s.columns === 'object' ? s.columns : {};
+    const cleanCol = arr => Array.isArray(arr) ? arr.map(c => ({
+      id: String(c.id || ('card_' + Math.random().toString(36).slice(2, 10))),
+      title: String(c.title || ''),
+      labels: Array.isArray(c.labels) ? c.labels.map(String) : []
+    })) : [];
     return {
-      bugs: Array.isArray(s.bugs) ? s.bugs.map(String) : [],
-      roadmap: Array.isArray(s.roadmap) ? s.roadmap.map(String) : [],
-      completed: Array.isArray(s.completed) ? s.completed.map(String) : [],
+      labels,
+      columns: {
+        bugs: cleanCol(cols.bugs),
+        roadmap: cleanCol(cols.roadmap),
+        completed: cleanCol(cols.completed)
+      },
+      nextCardId: typeof s.nextCardId === 'number' ? s.nextCardId : 1,
       savedAt: s.savedAt || null
     };
   }
 
+  function labelById(id) {
+    return state.labels.find(l => l.id === id);
+  }
+  function nextCardId() {
+    const n = state.nextCardId || 1;
+    state.nextCardId = n + 1;
+    return 'card_' + Date.now() + '_' + n;
+  }
+  function nextCardDisplayId(col, idx) {
+    // Stable display IDs based on creation order across the board
+    const all = [
+      ...state.columns.bugs,
+      ...state.columns.roadmap,
+      ...state.columns.completed
+    ];
+    return 'KB-' + (all.findIndex(c => c.id === state.columns[col][idx].id) + 1);
+  }
+  function newLabelId() {
+    return 'lbl_' + Math.random().toString(36).slice(2, 10);
+  }
+
   // ============ RENDER ============
   function render() {
+    closePicker();
     document.body.classList.toggle('editing', isEditing);
     ['bugs', 'roadmap', 'completed'].forEach(col => {
       const container = document.querySelector(`.cards[data-col="${col}"]`);
       container.innerHTML = '';
-      state[col].forEach((text, idx) => container.appendChild(buildCard(text, col, idx)));
-      document.querySelector(`[data-count-for="${col}"]`).textContent = state[col].length;
+      const cards = state.columns[col];
+      if (cards.length === 0 && !isEditing) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-col';
+        empty.textContent = 'No items';
+        container.appendChild(empty);
+      } else {
+        cards.forEach((card, idx) => container.appendChild(buildCard(card, col, idx)));
+      }
+      document.querySelector(`[data-count-for="${col}"]`).textContent = cards.length;
     });
-    document.getElementById('totalCount').textContent = state.bugs.length + state.roadmap.length + state.completed.length;
+    const total = state.columns.bugs.length + state.columns.roadmap.length + state.columns.completed.length;
+    document.getElementById('totalCount').textContent = total;
     updateMeta();
   }
 
-  function buildCard(text, col, idx) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.col = col;
-    card.dataset.idx = idx;
-    card.draggable = isEditing;
+  function buildCard(card, col, idx) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.col = col;
+    el.dataset.idx = idx;
+    el.dataset.cardId = card.id;
+    el.draggable = isEditing;
 
-    const textSpan = document.createElement('span');
-    textSpan.className = 'card-text';
-    textSpan.textContent = text;
-    card.appendChild(textSpan);
+    // ID row
+    const idRow = document.createElement('div');
+    idRow.className = 'card-id';
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'card-id-icon';
+    idRow.appendChild(iconSpan);
+    const idText = document.createElement('span');
+    idText.textContent = nextCardDisplayId(col, idx);
+    idRow.appendChild(idText);
+    el.appendChild(idRow);
+
+    // Title
+    const title = document.createElement('div');
+    title.className = 'card-title';
+    title.textContent = card.title || 'Untitled';
+    el.appendChild(title);
+
+    // Labels
+    if (card.labels && card.labels.length > 0) {
+      const labelsRow = document.createElement('div');
+      labelsRow.className = 'card-labels';
+      card.labels.forEach(lid => {
+        const lbl = labelById(lid);
+        if (!lbl) return;
+        const pill = document.createElement('span');
+        pill.className = 'label-pill';
+        pill.dataset.color = lbl.color;
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        pill.appendChild(dot);
+        pill.appendChild(document.createTextNode(lbl.name));
+        labelsRow.appendChild(pill);
+      });
+      el.appendChild(labelsRow);
+    }
 
     if (isEditing) {
       const actions = document.createElement('div');
       actions.className = 'card-actions';
 
+      const labelBtn = document.createElement('button');
+      labelBtn.title = 'Edit labels';
+      labelBtn.textContent = '#';
+      labelBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showLabelPicker(el, card);
+      });
+
       const editBtn = document.createElement('button');
-      editBtn.textContent = 'Edit';
-      editBtn.addEventListener('click', (e) => { e.stopPropagation(); startInlineEdit(card, textSpan); });
+      editBtn.title = 'Edit title';
+      editBtn.innerHTML = '&#9998;';
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        startInlineEdit(el, title, card);
+      });
 
       const delBtn = document.createElement('button');
       delBtn.className = 'del';
+      delBtn.title = 'Delete';
       delBtn.textContent = '×';
       delBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        state[col].splice(idx, 1);
+        state.columns[col].splice(idx, 1);
         render();
       });
 
+      actions.appendChild(labelBtn);
       actions.appendChild(editBtn);
       actions.appendChild(delBtn);
-      card.appendChild(actions);
+      el.appendChild(actions);
 
-      card.addEventListener('dragstart', (e) => {
+      el.addEventListener('dragstart', (e) => {
         draggedCard = { col, idx };
-        card.classList.add('dragging');
+        el.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
-        try { e.dataTransfer.setData('text/plain', String(idx)); } catch(_) {}
+        try { e.dataTransfer.setData('text/plain', card.id); } catch(_) {}
       });
-      card.addEventListener('dragend', () => {
-        card.classList.remove('dragging');
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
         document.querySelectorAll('.cards.drag-over').forEach(c => c.classList.remove('drag-over'));
         draggedCard = null;
       });
     }
 
-    return card;
+    return el;
   }
 
-  function startInlineEdit(card, textSpan) {
-    textSpan.contentEditable = 'true';
-    textSpan.focus();
+  function startInlineEdit(cardEl, titleEl, card) {
+    titleEl.contentEditable = 'true';
+    titleEl.focus();
     const range = document.createRange();
-    range.selectNodeContents(textSpan);
+    range.selectNodeContents(titleEl);
     range.collapse(false);
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
 
     const finish = () => {
-      const newText = textSpan.textContent.trim();
-      const col = card.dataset.col;
-      const idx = parseInt(card.dataset.idx, 10);
-      if (newText) state[col][idx] = newText;
-      else state[col].splice(idx, 1);
+      const newText = titleEl.textContent.trim();
+      const col = cardEl.dataset.col;
+      const idx = parseInt(cardEl.dataset.idx, 10);
+      if (newText) {
+        state.columns[col][idx].title = newText;
+      } else {
+        state.columns[col].splice(idx, 1);
+      }
       render();
     };
-    textSpan.addEventListener('blur', finish, { once: true });
-    textSpan.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); textSpan.blur(); }
+    titleEl.addEventListener('blur', finish, { once: true });
+    titleEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); }
       if (e.key === 'Escape') { e.preventDefault(); render(); }
     });
   }
 
+  // ============ LABEL PICKER ON CARD ============
+  function showLabelPicker(cardEl, card) {
+    closePicker();
+    const picker = document.createElement('div');
+    picker.className = 'label-picker';
+    state.labels.forEach(lbl => {
+      const item = document.createElement('div');
+      item.className = 'label-picker-item';
+      if (card.labels.includes(lbl.id)) item.classList.add('selected');
+
+      const dot = document.createElement('span');
+      dot.className = 'label-picker-dot';
+      dot.dataset.color = lbl.color;
+      item.appendChild(dot);
+
+      const name = document.createElement('span');
+      name.textContent = lbl.name;
+      item.appendChild(name);
+
+      const check = document.createElement('span');
+      check.className = 'check';
+      check.textContent = '✓';
+      item.appendChild(check);
+
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = card.labels.indexOf(lbl.id);
+        if (idx === -1) card.labels.push(lbl.id);
+        else card.labels.splice(idx, 1);
+        render();
+      });
+      picker.appendChild(item);
+    });
+
+    if (state.labels.length === 0) {
+      const note = document.createElement('div');
+      note.className = 'label-picker-item';
+      note.style.color = 'var(--text-4)';
+      note.textContent = 'No labels — add some first';
+      picker.appendChild(note);
+    }
+
+    // Position below the card
+    document.body.appendChild(picker);
+    const rect = cardEl.getBoundingClientRect();
+    picker.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+    picker.style.left = (rect.left + window.scrollX) + 'px';
+
+    openPicker = picker;
+
+    setTimeout(() => {
+      document.addEventListener('click', closePickerOnClickAway, { once: true });
+    }, 0);
+  }
+  function closePickerOnClickAway(e) {
+    if (openPicker && !openPicker.contains(e.target)) {
+      closePicker();
+    } else if (openPicker) {
+      document.addEventListener('click', closePickerOnClickAway, { once: true });
+    }
+  }
+  function closePicker() {
+    if (openPicker) { openPicker.remove(); openPicker = null; }
+  }
+
+  // ============ DRAG & DROP ============
   function setupDropZones() {
     document.querySelectorAll('.cards').forEach(zone => {
       zone.addEventListener('dragover', (e) => {
@@ -429,7 +905,7 @@
         zone.classList.remove('drag-over');
         const targetCol = zone.dataset.col;
         const { col: srcCol, idx: srcIdx } = draggedCard;
-        const text = state[srcCol][srcIdx];
+        const card = state.columns[srcCol][srcIdx];
 
         const cards = [...zone.querySelectorAll('.card:not(.dragging)')];
         let dropIdx = cards.length;
@@ -441,31 +917,123 @@
           }
         }
 
-        state[srcCol].splice(srcIdx, 1);
+        state.columns[srcCol].splice(srcIdx, 1);
         if (srcCol === targetCol && srcIdx < dropIdx) dropIdx--;
-        state[targetCol].splice(dropIdx, 0, text);
+        state.columns[targetCol].splice(dropIdx, 0, card);
         draggedCard = null;
         render();
       });
     });
   }
 
+  // ============ LABEL MANAGER ============
+  function renderLabelManager() {
+    const container = document.getElementById('labelManager');
+    container.innerHTML = '';
+    state.labels.forEach((lbl, i) => {
+      const row = document.createElement('div');
+      row.className = 'label-row';
+
+      // Color swatch (cycles through colors on click, or opens mini-picker)
+      const swatchWrap = document.createElement('div');
+      swatchWrap.style.position = 'relative';
+
+      const swatch = document.createElement('div');
+      swatch.className = 'color-swatch active';
+      swatch.dataset.color = lbl.color;
+      swatch.title = 'Click to change color';
+      swatch.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Toggle a popover with all colors
+        const existing = swatchWrap.querySelector('.color-picker');
+        if (existing) { existing.remove(); return; }
+        const picker = document.createElement('div');
+        picker.className = 'color-picker';
+        picker.style.position = 'absolute';
+        picker.style.top = '24px'; picker.style.left = '0';
+        picker.style.zIndex = '60';
+        COLORS.forEach(c => {
+          const s = document.createElement('div');
+          s.className = 'color-swatch';
+          s.dataset.color = c;
+          if (c === lbl.color) s.classList.add('active');
+          s.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            lbl.color = c;
+            renderLabelManager();
+          });
+          picker.appendChild(s);
+        });
+        swatchWrap.appendChild(picker);
+        setTimeout(() => {
+          document.addEventListener('click', function close() {
+            picker.remove();
+          }, { once: true });
+        }, 0);
+      });
+      swatchWrap.appendChild(swatch);
+      row.appendChild(swatchWrap);
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'label-name-input';
+      input.value = lbl.name;
+      input.addEventListener('input', () => { lbl.name = input.value; });
+      row.appendChild(input);
+
+      const del = document.createElement('button');
+      del.textContent = '×';
+      del.className = 'danger';
+      del.style.padding = '0'; del.style.width = '28px';
+      del.title = 'Delete label';
+      del.addEventListener('click', () => {
+        if (!confirm(`Delete label "${lbl.name}"? It will be removed from all cards.`)) return;
+        // Remove label from all cards
+        ['bugs', 'roadmap', 'completed'].forEach(col => {
+          state.columns[col].forEach(c => {
+            c.labels = c.labels.filter(id => id !== lbl.id);
+          });
+        });
+        state.labels.splice(i, 1);
+        renderLabelManager();
+        render();
+      });
+      row.appendChild(del);
+
+      container.appendChild(row);
+    });
+
+    if (state.labels.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'color: var(--text-4); text-align: center; padding: 16px; font-size: 12px;';
+      empty.textContent = 'No labels yet';
+      container.appendChild(empty);
+    }
+  }
+
+  // ============ MODE / UI ============
   function setMode(m) {
     const indicator = document.getElementById('modeIndicator');
-    if (m === 'loading') indicator.innerHTML = '<span class="status-dot loading"></span>Loading…';
-    else if (m === 'editing') indicator.innerHTML = '<span class="status-dot editing"></span>Editing';
-    else if (m === 'error') indicator.innerHTML = '<span class="status-dot error"></span>Offline';
-    else indicator.innerHTML = '<span class="status-dot live"></span>Live';
+    if (m === 'loading') indicator.innerHTML = '<span class="status-dot loading"></span><span>Loading…</span>';
+    else if (m === 'editing') indicator.innerHTML = '<span class="status-dot editing"></span><span>Editing</span>';
+    else if (m === 'error') indicator.innerHTML = '<span class="status-dot error"></span><span>Offline</span>';
+    else indicator.innerHTML = '<span class="status-dot live"></span><span>Live</span>';
   }
 
   function updateMeta() {
     const saved = state.savedAt ? new Date(state.savedAt) : null;
     document.getElementById('lastSaved').textContent = saved
-      ? saved.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-      : 'never';
-    document.getElementById('footerStatus').textContent = saved
-      ? 'Last saved ' + saved.toLocaleString()
-      : 'No saves yet';
+      ? 'Updated ' + relativeTime(saved)
+      : 'Never saved';
+  }
+
+  function relativeTime(d) {
+    const diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+    return d.toLocaleDateString();
   }
 
   function toast(msg, isError) {
@@ -474,7 +1042,7 @@
     t.classList.toggle('error', !!isError);
     t.classList.add('show');
     clearTimeout(toast._t);
-    toast._t = setTimeout(() => t.classList.remove('show'), 2400);
+    toast._t = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
   function enterEditMode() {
@@ -483,6 +1051,7 @@
     document.getElementById('editBtn').style.display = 'none';
     document.getElementById('saveBtn').style.display = '';
     document.getElementById('cancelBtn').style.display = '';
+    document.getElementById('manageLabelsBtn').style.display = '';
     setMode('editing');
     render();
     toast('Edit mode enabled');
@@ -494,33 +1063,33 @@
     document.getElementById('editBtn').style.display = '';
     document.getElementById('saveBtn').style.display = 'none';
     document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('manageLabelsBtn').style.display = 'none';
     setMode('live');
     render();
     if (savedOk === true) toast('Saved');
     else if (savedOk === false) toast('Changes discarded');
   }
 
-  function openModal() {
-    document.getElementById('modal').classList.add('open');
+  // ============ MODAL ============
+  function openPwModal() {
+    document.getElementById('pwModal').classList.add('open');
     document.getElementById('pwInput').value = '';
     document.getElementById('pwError').textContent = '';
     setTimeout(() => document.getElementById('pwInput').focus(), 50);
   }
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
+  function closePwModal() {
+    document.getElementById('pwModal').classList.remove('open');
   }
-
   async function attemptUnlock() {
     const val = document.getElementById('pwInput').value;
     if (!val) {
       document.getElementById('pwError').textContent = 'Enter a password';
       return;
     }
-    const submitBtn = document.getElementById('pwSubmit');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Checking…';
+    const btn = document.getElementById('pwSubmit');
+    btn.disabled = true; btn.textContent = 'Checking…';
     try {
-      // Verify by attempting to save current state — wrong password returns 401
+      // Verify by attempting a save — wrong password returns 401
       const res = await fetch(WORKER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Edit-Password': val },
@@ -533,33 +1102,50 @@
         document.getElementById('pwError').textContent = 'Server error (' + res.status + ')';
       } else {
         editPassword = val;
-        closeModal();
+        closePwModal();
         enterEditMode();
       }
     } catch (e) {
       document.getElementById('pwError').textContent = 'Network error';
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Unlock';
+      btn.disabled = false; btn.textContent = 'Unlock';
     }
   }
 
+  function openLabelModal() {
+    renderLabelManager();
+    document.getElementById('labelModal').classList.add('open');
+  }
+  function closeLabelModal() {
+    document.getElementById('labelModal').classList.remove('open');
+    render(); // refresh card pills with any name/color changes
+  }
+
   // ============ EVENTS ============
-  document.getElementById('editBtn').addEventListener('click', openModal);
+  document.getElementById('editBtn').addEventListener('click', openPwModal);
   document.getElementById('pwSubmit').addEventListener('click', attemptUnlock);
-  document.getElementById('pwCancel').addEventListener('click', closeModal);
+  document.getElementById('pwCancel').addEventListener('click', closePwModal);
   document.getElementById('pwInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') attemptUnlock();
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') closePwModal();
   });
-  document.getElementById('modal').addEventListener('click', (e) => {
-    if (e.target.id === 'modal') closeModal();
+  document.getElementById('pwModal').addEventListener('click', (e) => {
+    if (e.target.id === 'pwModal') closePwModal();
+  });
+
+  document.getElementById('manageLabelsBtn').addEventListener('click', openLabelModal);
+  document.getElementById('labelDone').addEventListener('click', closeLabelModal);
+  document.getElementById('labelModal').addEventListener('click', (e) => {
+    if (e.target.id === 'labelModal') closeLabelModal();
+  });
+  document.getElementById('addLabelBtn').addEventListener('click', () => {
+    state.labels.push({ id: newLabelId(), name: 'New label', color: COLORS[state.labels.length % COLORS.length] });
+    renderLabelManager();
   });
 
   document.getElementById('saveBtn').addEventListener('click', async () => {
     const btn = document.getElementById('saveBtn');
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
+    btn.disabled = true; btn.textContent = 'Saving…';
     try {
       await pushState(editPassword);
       exitEditMode(true);
@@ -567,13 +1153,12 @@
       if (e.message === 'Unauthorized') {
         editPassword = null;
         toast('Session expired — re-enter password', true);
-        openModal();
+        openPwModal();
       } else {
         toast('Save failed: ' + e.message, true);
       }
     } finally {
-      btn.disabled = false;
-      btn.textContent = 'Save';
+      btn.disabled = false; btn.textContent = 'Save changes';
     }
   });
 
@@ -582,17 +1167,20 @@
     exitEditMode(false);
   });
 
-  document.querySelectorAll('.add-card').forEach(btn => {
-    btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-add]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!isEditing) return;
       const col = btn.dataset.add;
-      state[col].push('New item');
+      const newCard = { id: nextCardId(), title: 'New item', labels: [] };
+      state.columns[col].push(newCard);
       render();
       requestAnimationFrame(() => {
         const cards = document.querySelectorAll(`.cards[data-col="${col}"] .card`);
         const last = cards[cards.length - 1];
         if (last) {
-          const textSpan = last.querySelector('.card-text');
-          startInlineEdit(last, textSpan);
+          const titleEl = last.querySelector('.card-title');
+          startInlineEdit(last, titleEl, newCard);
         }
       });
     });
