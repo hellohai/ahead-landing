@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bugs & Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4f1ea;
+    --paper-2: #ebe6da;
+    --ink: #1a1814;
+    --ink-soft: #4a4540;
+    --ink-faded: #8a8278;
+    --accent: #c8412b;
+    --rule: #d4cdbf;
+    --card-bg: #fbf8f1;
+    --col-bug: #c8412b;
+    --col-todo: #2b5fc8;
+    --col-done: #4a7c4a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; }
+  body {
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(200, 65, 43, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(43, 95, 200, 0.03) 0%, transparent 40%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 48px 32px 80px;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+  header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 1px solid var(--ink); padding-bottom: 24px; margin-bottom: 40px;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .title-block { flex: 1; min-width: 280px; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--ink-faded); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 800;
+    font-size: clamp(48px, 7vw, 88px); line-height: 0.95;
+    letter-spacing: -0.03em; font-variation-settings: "opsz" 144;
+  }
+  h1 .amp { font-style: italic; font-weight: 400; color: var(--accent); }
+  .meta { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft); }
+  .meta .row { display: flex; gap: 16px; justify-content: flex-end; margin-bottom: 6px; }
+  .meta .label { color: var(--ink-faded); }
+  .status-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ink-faded); margin-right: 6px; vertical-align: middle;
+  }
+  .status-dot.live { background: var(--col-done); box-shadow: 0 0 0 3px rgba(74, 124, 74, 0.2); animation: pulse 2s infinite; }
+  .status-dot.editing { background: var(--accent); box-shadow: 0 0 0 3px rgba(200, 65, 43, 0.2); }
+  .status-dot.loading { background: var(--ink-faded); animation: pulse 1s infinite; }
+  .status-dot.error { background: var(--accent); }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(74, 124, 74, 0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(74, 124, 74, 0); }
+  }
+  .toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 32px; gap: 16px; flex-wrap: wrap;
+  }
+  .toolbar-left { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft); }
+  .toolbar-left .count { color: var(--ink); font-weight: 600; }
+  .toolbar-right { display: flex; gap: 10px; }
+  button {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 10px 18px; border: 1px solid var(--ink);
+    background: transparent; color: var(--ink); cursor: pointer;
+    transition: all 0.15s ease; border-radius: 0;
+  }
+  button:hover { background: var(--ink); color: var(--paper); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+  button.primary:hover { background: var(--ink); border-color: var(--ink); }
+  button.ghost { border-color: var(--rule); color: var(--ink-soft); }
+  button.ghost:hover { background: var(--paper-2); color: var(--ink); border-color: var(--ink-soft); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button:disabled:hover { background: transparent; color: var(--ink); }
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
+  .column {
+    background: var(--card-bg); border: 1px solid var(--rule);
+    min-height: 500px; display: flex; flex-direction: column; position: relative;
+  }
+  .column-header {
+    padding: 20px 22px 16px; border-bottom: 1px solid var(--rule);
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  }
+  .column-title {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .column-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    padding: 3px 7px; border-radius: 2px; color: var(--paper);
+    font-weight: 600; transform: translateY(-3px);
+  }
+  .column[data-col="bugs"] .column-tag { background: var(--col-bug); }
+  .column[data-col="roadmap"] .column-tag { background: var(--col-todo); }
+  .column[data-col="completed"] .column-tag { background: var(--col-done); }
+  .column-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-faded); }
+  .cards { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 100px; }
+  .card {
+    background: var(--paper); border: 1px solid var(--rule);
+    padding: 14px 16px; font-size: 14px; line-height: 1.45;
+    color: var(--ink); position: relative; transition: all 0.15s ease;
+    cursor: default; word-break: break-word;
+  }
+  .editing .card { cursor: grab; }
+  .editing .card:hover {
+    border-color: var(--ink); box-shadow: 2px 2px 0 var(--ink);
+    transform: translate(-1px, -1px);
+  }
+  .card.dragging { opacity: 0.4; cursor: grabbing; }
+  .card-actions { position: absolute; top: 8px; right: 8px; display: none; gap: 4px; }
+  .editing .card:hover .card-actions { display: flex; }
+  .card-actions button {
+    padding: 4px 6px; font-size: 10px;
+    border: 1px solid var(--rule); background: var(--card-bg); line-height: 1;
+  }
+  .card-actions button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .card-actions .del:hover { background: var(--accent); border-color: var(--accent); }
+  .cards.drag-over { background: var(--paper-2); }
+  .add-card {
+    border: 1px dashed var(--rule); padding: 12px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-faded); cursor: pointer; text-transform: uppercase;
+    letter-spacing: 0.1em; background: transparent; width: 100%;
+    transition: all 0.15s ease; display: none;
+  }
+  .add-card:hover { border-color: var(--ink); color: var(--ink); background: var(--paper-2); }
+  .editing .add-card { display: block; }
+  .card-text[contenteditable="true"] {
+    outline: 2px solid var(--accent); outline-offset: -1px;
+    background: #fff; cursor: text;
+  }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(26, 24, 20, 0.55);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--paper); border: 1px solid var(--ink); padding: 36px;
+    width: min(420px, 90vw); box-shadow: 8px 8px 0 var(--ink);
+    animation: pop 0.2s ease;
+  }
+  @keyframes pop {
+    from { transform: translate(8px, 8px) scale(0.98); opacity: 0; }
+    to { transform: translate(0, 0) scale(1); opacity: 1; }
+  }
+  .modal h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 28px; margin-bottom: 8px; letter-spacing: -0.01em;
+  }
+  .modal p { color: var(--ink-soft); font-size: 13px; margin-bottom: 24px; }
+  .modal input {
+    width: 100%; padding: 14px 16px; border: 1px solid var(--ink);
+    background: #fff; font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; margin-bottom: 16px; color: var(--ink); border-radius: 0;
+  }
+  .modal input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .error-msg {
+    color: var(--accent); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 12px; min-height: 14px;
+  }
+  .toast {
+    position: fixed; bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--paper); padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    opacity: 0; transition: all 0.25s ease; pointer-events: none; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { background: var(--accent); }
+  footer {
+    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-faded); display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-block">
+        <div class="eyebrow">Internal · Project Status · v1</div>
+        <h1>Bugs <span class="amp">&amp;</span> Roadmap</h1>
+      </div>
+      <div class="meta">
+        <div class="row"><span class="label">Mode</span><span id="modeIndicator"><span class="status-dot loading"></span>Loading…</span></div>
+        <div class="row"><span class="label">Last saved</span><span id="lastSaved">—</span></div>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <span class="count" id="totalCount">0</span> items tracked
+      </div>
+      <div class="toolbar-right">
+        <button id="editBtn" class="primary">Edit</button>
+        <button id="saveBtn" style="display:none">Save</button>
+        <button id="cancelBtn" class="ghost" style="display:none">Cancel</button>
+      </div>
+    </div>
+
+    <div class="board" id="board">
+      <div class="column" data-col="bugs">
+        <div class="column-header">
+          <div class="column-title">Known bugs <span class="column-tag">Bug</span></div>
+          <div class="column-count" data-count-for="bugs">0</div>
+        </div>
+        <div class="cards" data-col="bugs"></div>
+        <button class="add-card" data-add="bugs">+ Add card</button>
+      </div>
+      <div class="column" data-col="roadmap">
+        <div class="column-header">
+          <div class="column-title">Roadmap <span class="column-tag">Todo</span></div>
+          <div class="column-count" data-count-for="roadmap">0</div>
+        </div>
+        <div class="cards" data-col="roadmap"></div>
+        <button class="add-card" data-add="roadmap">+ Add card</button>
+      </div>
+      <div class="column" data-col="completed">
+        <div class="column-header">
+          <div class="column-title">Completed <span class="column-tag">Done</span></div>
+          <div class="column-count" data-count-for="completed">0</div>
+        </div>
+        <div class="cards" data-col="completed"></div>
+        <button class="add-card" data-add="completed">+ Add card</button>
+      </div>
+    </div>
+
+    <footer>
+      <span>State synced via Cloudflare Worker</span>
+      <span id="footerStatus">—</span>
+    </footer>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h2>Enter password</h2>
+      <p>Editing is protected. Enter the password to make changes.</p>
+      <input type="password" id="pwInput" placeholder="Password" autocomplete="off">
+      <div class="error-msg" id="pwError"></div>
+      <div class="modal-actions">
+        <button class="ghost" id="pwCancel">Cancel</button>
+        <button class="primary" id="pwSubmit">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  // ============ CONFIG ============
+  // Replace with your deployed Worker URL.
+  // Example: "https://kanban-worker.yourname.workers.dev"
+  const WORKER_URL = "https://kanban-worker.jamesdarin.workers.dev";
+
+  // ============ STATE ============
+  let state = { bugs: [], roadmap: [], completed: [], savedAt: null };
+  let isEditing = false;
+  let stateBeforeEdit = null;
+  let editPassword = null;
+  let draggedCard = null;
+
+  // ============ API ============
+  async function fetchState() {
+    try {
+      setMode('loading');
+      const res = await fetch(WORKER_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      state = normalize(data);
+      setMode('live');
+      render();
+    } catch (e) {
+      console.error(e);
+      setMode('error');
+      toast('Could not load board: ' + e.message, true);
+    }
+  }
+
+  async function pushState(pw) {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Edit-Password': pw },
+      body: JSON.stringify(state)
+    });
+    if (res.status === 401) throw new Error('Unauthorized');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.savedAt) state.savedAt = data.savedAt;
+    return true;
+  }
+
+  function normalize(s) {
+    if (!s || typeof s !== 'object') s = {};
+    return {
+      bugs: Array.isArray(s.bugs) ? s.bugs.map(String) : [],
+      roadmap: Array.isArray(s.roadmap) ? s.roadmap.map(String) : [],
+      completed: Array.isArray(s.completed) ? s.completed.map(String) : [],
+      savedAt: s.savedAt || null
+    };
+  }
+
+  // ============ RENDER ============
+  function render() {
+    document.body.classList.toggle('editing', isEditing);
+    ['bugs', 'roadmap', 'completed'].forEach(col => {
+      const container = document.querySelector(`.cards[data-col="${col}"]`);
+      container.innerHTML = '';
+      state[col].forEach((text, idx) => container.appendChild(buildCard(text, col, idx)));
+      document.querySelector(`[data-count-for="${col}"]`).textContent = state[col].length;
+    });
+    document.getElementById('totalCount').textContent = state.bugs.length + state.roadmap.length + state.completed.length;
+    updateMeta();
+  }
+
+  function buildCard(text, col, idx) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.col = col;
+    card.dataset.idx = idx;
+    card.draggable = isEditing;
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'card-text';
+    textSpan.textContent = text;
+    card.appendChild(textSpan);
+
+    if (isEditing) {
+      const actions = document.createElement('div');
+      actions.className = 'card-actions';
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', (e) => { e.stopPropagation(); startInlineEdit(card, textSpan); });
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'del';
+      delBtn.textContent = '×';
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state[col].splice(idx, 1);
+        render();
+      });
+
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      card.appendChild(actions);
+
+      card.addEventListener('dragstart', (e) => {
+        draggedCard = { col, idx };
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', String(idx)); } catch(_) {}
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        document.querySelectorAll('.cards.drag-over').forEach(c => c.classList.remove('drag-over'));
+        draggedCard = null;
+      });
+    }
+
+    return card;
+  }
+
+  function startInlineEdit(card, textSpan) {
+    textSpan.contentEditable = 'true';
+    textSpan.focus();
+    const range = document.createRange();
+    range.selectNodeContents(textSpan);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    const finish = () => {
+      const newText = textSpan.textContent.trim();
+      const col = card.dataset.col;
+      const idx = parseInt(card.dataset.idx, 10);
+      if (newText) state[col][idx] = newText;
+      else state[col].splice(idx, 1);
+      render();
+    };
+    textSpan.addEventListener('blur', finish, { once: true });
+    textSpan.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); textSpan.blur(); }
+      if (e.key === 'Escape') { e.preventDefault(); render(); }
+    });
+  }
+
+  function setupDropZones() {
+    document.querySelectorAll('.cards').forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        if (!isEditing || !draggedCard) return;
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', (e) => {
+        if (e.target === zone) zone.classList.remove('drag-over');
+      });
+      zone.addEventListener('drop', (e) => {
+        if (!isEditing || !draggedCard) return;
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const targetCol = zone.dataset.col;
+        const { col: srcCol, idx: srcIdx } = draggedCard;
+        const text = state[srcCol][srcIdx];
+
+        const cards = [...zone.querySelectorAll('.card:not(.dragging)')];
+        let dropIdx = cards.length;
+        for (let i = 0; i < cards.length; i++) {
+          const rect = cards[i].getBoundingClientRect();
+          if (e.clientY < rect.top + rect.height / 2) {
+            dropIdx = parseInt(cards[i].dataset.idx, 10);
+            break;
+          }
+        }
+
+        state[srcCol].splice(srcIdx, 1);
+        if (srcCol === targetCol && srcIdx < dropIdx) dropIdx--;
+        state[targetCol].splice(dropIdx, 0, text);
+        draggedCard = null;
+        render();
+      });
+    });
+  }
+
+  function setMode(m) {
+    const indicator = document.getElementById('modeIndicator');
+    if (m === 'loading') indicator.innerHTML = '<span class="status-dot loading"></span>Loading…';
+    else if (m === 'editing') indicator.innerHTML = '<span class="status-dot editing"></span>Editing';
+    else if (m === 'error') indicator.innerHTML = '<span class="status-dot error"></span>Offline';
+    else indicator.innerHTML = '<span class="status-dot live"></span>Live';
+  }
+
+  function updateMeta() {
+    const saved = state.savedAt ? new Date(state.savedAt) : null;
+    document.getElementById('lastSaved').textContent = saved
+      ? saved.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+      : 'never';
+    document.getElementById('footerStatus').textContent = saved
+      ? 'Last saved ' + saved.toLocaleString()
+      : 'No saves yet';
+  }
+
+  function toast(msg, isError) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.toggle('error', !!isError);
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  function enterEditMode() {
+    isEditing = true;
+    stateBeforeEdit = JSON.parse(JSON.stringify(state));
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = '';
+    document.getElementById('cancelBtn').style.display = '';
+    setMode('editing');
+    render();
+    toast('Edit mode enabled');
+  }
+
+  function exitEditMode(savedOk) {
+    isEditing = false;
+    stateBeforeEdit = null;
+    document.getElementById('editBtn').style.display = '';
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('cancelBtn').style.display = 'none';
+    setMode('live');
+    render();
+    if (savedOk === true) toast('Saved');
+    else if (savedOk === false) toast('Changes discarded');
+  }
+
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwError').textContent = '';
+    setTimeout(() => document.getElementById('pwInput').focus(), 50);
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  async function attemptUnlock() {
+    const val = document.getElementById('pwInput').value;
+    if (!val) {
+      document.getElementById('pwError').textContent = 'Enter a password';
+      return;
+    }
+    const submitBtn = document.getElementById('pwSubmit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Checking…';
+    try {
+      // Verify by attempting to save current state — wrong password returns 401
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Edit-Password': val },
+        body: JSON.stringify(state)
+      });
+      if (res.status === 401) {
+        document.getElementById('pwError').textContent = 'Incorrect password';
+        document.getElementById('pwInput').select();
+      } else if (!res.ok) {
+        document.getElementById('pwError').textContent = 'Server error (' + res.status + ')';
+      } else {
+        editPassword = val;
+        closeModal();
+        enterEditMode();
+      }
+    } catch (e) {
+      document.getElementById('pwError').textContent = 'Network error';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Unlock';
+    }
+  }
+
+  // ============ EVENTS ============
+  document.getElementById('editBtn').addEventListener('click', openModal);
+  document.getElementById('pwSubmit').addEventListener('click', attemptUnlock);
+  document.getElementById('pwCancel').addEventListener('click', closeModal);
+  document.getElementById('pwInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') attemptUnlock();
+    if (e.key === 'Escape') closeModal();
+  });
+  document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') closeModal();
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      await pushState(editPassword);
+      exitEditMode(true);
+    } catch (e) {
+      if (e.message === 'Unauthorized') {
+        editPassword = null;
+        toast('Session expired — re-enter password', true);
+        openModal();
+      } else {
+        toast('Save failed: ' + e.message, true);
+      }
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save';
+    }
+  });
+
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    if (stateBeforeEdit) state = stateBeforeEdit;
+    exitEditMode(false);
+  });
+
+  document.querySelectorAll('.add-card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const col = btn.dataset.add;
+      state[col].push('New item');
+      render();
+      requestAnimationFrame(() => {
+        const cards = document.querySelectorAll(`.cards[data-col="${col}"] .card`);
+        const last = cards[cards.length - 1];
+        if (last) {
+          const textSpan = last.querySelector('.card-text');
+          startInlineEdit(last, textSpan);
+        }
+      });
+    });
+  });
+
+  // ============ INIT ============
+  setupDropZones();
+  fetchState();
+</script>
+</body>
+</html>
