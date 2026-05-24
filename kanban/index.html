@@ -1,1 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bugs & Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Theme variables — get overwritten by applyTheme() at runtime.
+       Defaults here are the light theme with hue 230, intensity 30. */
+    --bg: #ffffff;
+    --bg-2: #fafbfc;
+    --bg-3: #f4f5f8;
+    --bg-hover: #eef0f3;
+    --surface: #ffffff;
+    --surface-2: #f7f8fa;
+    --border: #e6e8ec;
+    --border-2: #d6d9df;
+    --border-strong: #b8bcc4;
+    --text: #1a1c1f;
+    --text-2: #44474d;
+    --text-3: #6b6f76;
+    --text-4: #9499a0;
+    --accent: #5e6ad2;
+    --accent-hover: #4f5bc8;
+    --accent-soft: rgba(94, 106, 210, 0.08);
+    --danger: #d93f3f;
+    --success: #2f9e6b;
+    --shadow-color: 16, 24, 40;
+
+    /* Label palette — tuned for light backgrounds. Stays constant across themes. */
+    --c-red: #c93838;        --c-red-bg: #fce8e8;
+    --c-orange: #c46a1c;     --c-orange-bg: #fdeed8;
+    --c-yellow: #a87f0a;     --c-yellow-bg: #fbf2cc;
+    --c-green: #1f8a5c;      --c-green-bg: #d8f0e3;
+    --c-teal: #267d97;       --c-teal-bg: #d6ecf2;
+    --c-blue: #2f6ad9;       --c-blue-bg: #dde8fb;
+    --c-violet: #6a47ba;     --c-violet-bg: #e6dff5;
+    --c-pink: #b14a8a;       --c-pink-bg: #f7dcec;
+    --c-gray: #6b6f76;       --c-gray-bg: #e8eaee;
+  }
+
+  /* Dark-mode label palette (slightly more saturated, darker tinted bgs). */
+  body.theme-dark {
+    --c-red: #f2555a;        --c-red-bg: rgba(242, 85, 90, 0.14);
+    --c-orange: #f2994a;     --c-orange-bg: rgba(242, 153, 74, 0.14);
+    --c-yellow: #f2c94c;     --c-yellow-bg: rgba(242, 201, 76, 0.14);
+    --c-green: #4cb782;      --c-green-bg: rgba(76, 183, 130, 0.14);
+    --c-teal: #4ea7c9;       --c-teal-bg: rgba(78, 167, 201, 0.14);
+    --c-blue: #5e8df2;       --c-blue-bg: rgba(94, 141, 242, 0.14);
+    --c-violet: #8a63d2;     --c-violet-bg: rgba(138, 99, 210, 0.14);
+    --c-pink: #d97ab8;       --c-pink-bg: rgba(217, 122, 184, 0.14);
+    --c-gray: #8a8f98;       --c-gray-bg: rgba(138, 143, 152, 0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    font-feature-settings: "cv11", "ss01", "ss03";
+  }
+
+  body { padding: 24px 28px 80px; }
+  .container { max-width: 1600px; margin: 0 auto; }
+
+  /* ===== Header ===== */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-3); font-size: 13px; font-weight: 450;
+  }
+  .breadcrumb .sep { color: var(--text-4); }
+  .breadcrumb .current { color: var(--text); font-weight: 500; }
+  .breadcrumb .icon {
+    width: 16px; height: 16px; border-radius: 4px;
+    background: var(--accent); display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: #fff;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-3); font-weight: 450;
+    padding: 4px 10px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--surface);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-4);
+  }
+  .status-dot.live { background: var(--success); box-shadow: 0 0 0 3px rgba(76, 183, 130, 0.15); }
+  .status-dot.editing { background: var(--accent); box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.2); }
+  .status-dot.loading { background: var(--text-3); animation: pulse 1s infinite; }
+  .status-dot.error { background: var(--danger); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ===== Title row ===== */
+  .title-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 4px; gap: 16px; flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-3); font-size: 13px; font-weight: 450;
+    margin-bottom: 20px;
+  }
+
+  /* ===== Tabs (visual only) ===== */
+  .tabs {
+    display: flex; gap: 4px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 8px 12px; font-size: 13px; font-weight: 500;
+    color: var(--text-3); border-bottom: 1px solid transparent;
+    margin-bottom: -1px; cursor: default;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  /* ===== Toolbar ===== */
+  .toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; gap: 12px; flex-wrap: wrap;
+  }
+  .toolbar-left {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--text-3); font-weight: 450;
+  }
+  .toolbar-left .count { color: var(--text-2); }
+  .toolbar-right { display: flex; gap: 8px; }
+
+  button {
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    padding: 6px 12px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-2);
+    cursor: pointer; transition: all 0.12s ease;
+    border-radius: 6px; height: 28px;
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  button:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-2); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+  button.ghost { background: transparent; border-color: transparent; }
+  button.ghost:hover { background: var(--bg-hover); }
+  button.danger { color: var(--danger); }
+  button.danger:hover { background: #fce8e8; border-color: #f3c2c2; color: var(--danger); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button:disabled:hover { background: var(--surface); color: var(--text-2); border-color: var(--border); }
+
+  /* ===== Board ===== */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 1000px) { .board { grid-template-columns: 1fr; } }
+
+  .column {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 400px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .column-header {
+    padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-2); position: sticky; top: 0; z-index: 2;
+  }
+  .col-status-icon {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid currentColor; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .column[data-col="bugs"] .col-status-icon { color: var(--c-gray); }
+  .column[data-col="roadmap"] .col-status-icon {
+    color: var(--c-yellow);
+    background: conic-gradient(var(--c-yellow) 50%, transparent 50%);
+    border-color: var(--c-yellow);
+  }
+  .column[data-col="completed"] .col-status-icon {
+    color: var(--c-violet); background: var(--c-violet); border-color: var(--c-violet);
+  }
+  .column[data-col="completed"] .col-status-icon::after {
+    content: ''; position: absolute; width: 5px; height: 3px;
+    border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    transform: rotate(-45deg); top: 2.5px; left: 2.5px;
+  }
+  .column-title {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    letter-spacing: -0.005em;
+  }
+  .column-count {
+    font-size: 12px; color: var(--text-4); font-weight: 450;
+    margin-left: 2px;
+  }
+  .column-actions { margin-left: auto; display: flex; gap: 2px; }
+  .column-actions button {
+    width: 22px; height: 22px; padding: 0; border: none;
+    background: transparent; color: var(--text-3);
+    border-radius: 4px; font-size: 14px;
+    display: none; align-items: center; justify-content: center;
+  }
+  .editing .column-actions button { display: inline-flex; }
+  .column-actions button:hover { background: var(--bg-hover); color: var(--text); }
+
+  .cards {
+    padding: 8px; display: flex; flex-direction: column; gap: 6px;
+    flex: 1; min-height: 80px;
+  }
+  .cards.drag-over { background: var(--bg-3); }
+
+  /* ===== Card ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: default;
+    position: relative;
+    transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
+  }
+  .card:hover {
+    border-color: var(--border-2);
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.06);
+  }
+  .editing .card { cursor: grab; }
+  .editing .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.3; }
+
+  .card-id {
+    font-size: 11px; color: var(--text-4); font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 4px;
+  }
+  .card-id-icon {
+    width: 12px; height: 12px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .column[data-col="bugs"] .card-id-icon {
+    border: 1.5px solid var(--c-gray);
+  }
+  .column[data-col="roadmap"] .card-id-icon {
+    background: conic-gradient(var(--c-yellow) 50%, transparent 50%);
+    border: 1.5px solid var(--c-yellow);
+  }
+  .column[data-col="completed"] .card-id-icon {
+    background: var(--c-violet); border: 1.5px solid var(--c-violet);
+    position: relative;
+  }
+  .column[data-col="completed"] .card-id-icon::after {
+    content: ''; position: absolute; width: 4px; height: 2.5px;
+    border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    transform: rotate(-45deg); top: 2.5px; left: 2px;
+  }
+
+  .card-title {
+    font-size: 13px; font-weight: 450; color: var(--text);
+    line-height: 1.4; word-break: break-word;
+  }
+  .card-title[contenteditable="true"] {
+    outline: none; background: var(--bg-3);
+    padding: 2px 4px; margin: -2px -4px;
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px var(--accent);
+    cursor: text;
+  }
+
+  .card-labels {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+  }
+  .label-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 7px 2px 6px; border-radius: 10px;
+    font-size: 11px; font-weight: 500;
+    background: var(--c-gray-bg); color: var(--c-gray);
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .label-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  /* color variants */
+  .label-pill[data-color="red"]    { background: var(--c-red-bg);    color: var(--c-red); }
+  .label-pill[data-color="orange"] { background: var(--c-orange-bg); color: var(--c-orange); }
+  .label-pill[data-color="yellow"] { background: var(--c-yellow-bg); color: var(--c-yellow); }
+  .label-pill[data-color="green"]  { background: var(--c-green-bg);  color: var(--c-green); }
+  .label-pill[data-color="teal"]   { background: var(--c-teal-bg);   color: var(--c-teal); }
+  .label-pill[data-color="blue"]   { background: var(--c-blue-bg);   color: var(--c-blue); }
+  .label-pill[data-color="violet"] { background: var(--c-violet-bg); color: var(--c-violet); }
+  .label-pill[data-color="pink"]   { background: var(--c-pink-bg);   color: var(--c-pink); }
+  .label-pill[data-color="gray"]   { background: var(--c-gray-bg);   color: var(--c-gray); }
+
+  .card-actions {
+    position: absolute; top: 6px; right: 6px;
+    display: none; gap: 2px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-2); border-radius: 5px;
+    padding: 2px;
+  }
+  .editing .card:hover .card-actions { display: flex; }
+  .card-actions button {
+    width: 22px; height: 22px; padding: 0; border: none;
+    background: transparent; color: var(--text-3); border-radius: 3px;
+    font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .card-actions button:hover { background: var(--bg-hover); color: var(--text); }
+  .card-actions button.del:hover { background: #fce8e8; color: var(--danger); }
+
+  /* Add card */
+  .add-card {
+    display: none;
+    width: 100%; padding: 8px 12px;
+    border: 1px dashed var(--border-2);
+    background: transparent; color: var(--text-3);
+    font-size: 12px; font-weight: 500;
+    border-radius: 6px; cursor: pointer;
+    transition: all 0.12s ease;
+    margin-top: 4px;
+    text-align: left;
+  }
+  .add-card:hover { background: var(--bg-hover); color: var(--text-2); border-color: var(--border-strong); }
+  .editing .add-card { display: block; }
+
+  /* ===== Modal / popover ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(16, 24, 40, 0.32);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px;
+    width: min(440px, 92vw);
+    box-shadow: 0 16px 48px rgba(16, 24, 40, 0.16), 0 4px 12px rgba(16, 24, 40, 0.08);
+    animation: pop 0.15s ease;
+  }
+  @keyframes pop {
+    from { transform: translateY(6px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .modal h2 {
+    font-size: 15px; font-weight: 600; margin-bottom: 4px;
+  }
+  .modal p {
+    color: var(--text-3); font-size: 13px; margin-bottom: 18px;
+  }
+  .modal-input {
+    width: 100%; padding: 8px 10px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-size: 13px; font-family: inherit;
+    border-radius: 6px; margin-bottom: 8px;
+    transition: border-color 0.12s ease;
+  }
+  .modal-input:focus { outline: none; border-color: var(--accent); }
+  .modal-actions {
+    display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;
+  }
+  .error-msg {
+    color: var(--danger); font-size: 12px; min-height: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* ===== Label manager ===== */
+  .label-manager { max-height: 60vh; overflow-y: auto; margin: -4px 0 8px; }
+  .label-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 4px; border-radius: 6px;
+  }
+  .label-row:hover { background: var(--bg-3); }
+  .color-swatch {
+    width: 18px; height: 18px; border-radius: 50%;
+    cursor: pointer; flex-shrink: 0;
+    border: 2px solid transparent;
+    transition: transform 0.1s ease;
+  }
+  .color-swatch:hover { transform: scale(1.1); }
+  .color-swatch.active { border-color: var(--text); }
+  .color-swatch[data-color="red"]    { background: var(--c-red); }
+  .color-swatch[data-color="orange"] { background: var(--c-orange); }
+  .color-swatch[data-color="yellow"] { background: var(--c-yellow); }
+  .color-swatch[data-color="green"]  { background: var(--c-green); }
+  .color-swatch[data-color="teal"]   { background: var(--c-teal); }
+  .color-swatch[data-color="blue"]   { background: var(--c-blue); }
+  .color-swatch[data-color="violet"] { background: var(--c-violet); }
+  .color-swatch[data-color="pink"]   { background: var(--c-pink); }
+  .color-swatch[data-color="gray"]   { background: var(--c-gray); }
+
+  .label-name-input {
+    flex: 1; padding: 5px 8px; background: var(--bg);
+    border: 1px solid var(--border); color: var(--text);
+    font-size: 12px; font-family: inherit; border-radius: 5px;
+  }
+  .label-name-input:focus { outline: none; border-color: var(--accent); }
+  .color-picker {
+    display: flex; gap: 4px; padding: 6px;
+    background: var(--bg-3); border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  /* ===== Card label picker (popover on card) ===== */
+  .label-picker {
+    position: absolute; z-index: 50;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 8px; padding: 6px;
+    box-shadow: 0 12px 24px rgba(16, 24, 40, 0.12), 0 2px 6px rgba(16, 24, 40, 0.06);
+    min-width: 200px; max-height: 280px; overflow-y: auto;
+  }
+  .label-picker-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 8px; border-radius: 5px; cursor: pointer;
+    font-size: 12px; color: var(--text-2);
+    user-select: none;
+  }
+  .label-picker-item:hover { background: var(--bg-hover); color: var(--text); }
+  .label-picker-item.selected { background: var(--accent-soft); }
+  .label-picker-item .check { margin-left: auto; color: var(--accent); opacity: 0; font-size: 13px; }
+  .label-picker-item.selected .check { opacity: 1; }
+  .label-picker-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .label-picker-dot[data-color="red"]    { background: var(--c-red); }
+  .label-picker-dot[data-color="orange"] { background: var(--c-orange); }
+  .label-picker-dot[data-color="yellow"] { background: var(--c-yellow); }
+  .label-picker-dot[data-color="green"]  { background: var(--c-green); }
+  .label-picker-dot[data-color="teal"]   { background: var(--c-teal); }
+  .label-picker-dot[data-color="blue"]   { background: var(--c-blue); }
+  .label-picker-dot[data-color="violet"] { background: var(--c-violet); }
+  .label-picker-dot[data-color="pink"]   { background: var(--c-pink); }
+  .label-picker-dot[data-color="gray"]   { background: var(--c-gray); }
+
+  /* ===== Toast ===== */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    background: #1a1c1f; color: #ffffff;
+    padding: 8px 14px; font-size: 12px; font-weight: 500;
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(16, 24, 40, 0.16);
+    opacity: 0; transition: all 0.2s ease;
+    pointer-events: none; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { background: var(--danger); }
+
+  /* ===== Misc ===== */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  .empty-col {
+    color: var(--text-4); font-size: 12px; text-align: center;
+    padding: 20px 8px; font-style: italic;
+  }
+
+  /* ===== Theme switcher ===== */
+  .theme-fab {
+    position: fixed; bottom: 20px; right: 20px; z-index: 90;
+    width: 40px; height: 40px; padding: 0;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(var(--shadow-color), 0.12);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .theme-fab:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(var(--shadow-color), 0.18);
+    background: var(--surface);
+    border-color: var(--border-2);
+  }
+  .theme-fab svg { width: 18px; height: 18px; color: var(--text-2); }
+
+  .theme-panel {
+    position: fixed; bottom: 72px; right: 20px; z-index: 95;
+    width: 280px; padding: 16px;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 10px;
+    box-shadow: 0 16px 40px rgba(var(--shadow-color), 0.18), 0 4px 12px rgba(var(--shadow-color), 0.08);
+    display: none;
+    animation: pop 0.15s ease;
+  }
+  .theme-panel.open { display: block; }
+  .theme-panel h3 {
+    font-size: 13px; font-weight: 600; margin-bottom: 12px;
+    color: var(--text);
+  }
+  .theme-toggle {
+    display: flex; background: var(--bg-3); padding: 3px;
+    border-radius: 7px; margin-bottom: 16px;
+  }
+  .theme-toggle button {
+    flex: 1; height: 28px; border: none; background: transparent;
+    color: var(--text-3); font-size: 12px; font-weight: 500;
+    border-radius: 5px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.12s ease;
+  }
+  .theme-toggle button:hover { color: var(--text); background: transparent; }
+  .theme-toggle button.active {
+    background: var(--surface); color: var(--text);
+    box-shadow: 0 1px 2px rgba(var(--shadow-color), 0.08);
+  }
+  .theme-toggle svg { width: 13px; height: 13px; }
+
+  .slider-row { margin-bottom: 14px; }
+  .slider-row:last-child { margin-bottom: 0; }
+  .slider-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-3); font-weight: 500;
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .slider-label .value {
+    color: var(--text); font-variant-numeric: tabular-nums;
+    text-transform: none; letter-spacing: 0;
+  }
+  .slider {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; border-radius: 3px;
+    background: var(--bg-3); outline: none; cursor: pointer;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--accent);
+    cursor: pointer; transition: transform 0.1s ease;
+    box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.18);
+  }
+  .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .slider::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--accent);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(var(--shadow-color), 0.18);
+  }
+  /* Hue slider — rainbow track */
+  .slider.hue {
+    background: linear-gradient(to right,
+      hsl(0, 70%, 50%), hsl(60, 70%, 50%), hsl(120, 70%, 50%),
+      hsl(180, 70%, 50%), hsl(240, 70%, 50%), hsl(300, 70%, 50%), hsl(360, 70%, 50%));
+  }
+  .theme-panel .reset {
+    display: block; width: 100%; margin-top: 12px;
+    background: transparent; border-color: var(--border);
+    color: var(--text-3); font-size: 11px; height: 26px;
+  }
+  .theme-panel .reset:hover { color: var(--text); }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="breadcrumb">
+        <span class="icon">B</span>
+        <span>Ahead iOS</span>
+        <span class="sep">/</span>
+        <span class="current">Future</span>
+      </div>
+      <div class="header-right">
+        <div class="status-pill" id="modeIndicator">
+          <span class="status-dot loading"></span>
+          <span>Loading…</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="title-row">
+      <h1>Future</h1>
+    </div>
+    <div class="subtitle">Track known issues, what's on the roadmap, and what's shipped.</div>
+
+    <div class="tabs">
+      <div class="tab active">Board</div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <span><span class="count" id="totalCount">0</span> items</span>
+        <span>·</span>
+        <span><span id="lastSaved">never</span></span>
+      </div>
+      <div class="toolbar-right">
+        <button id="manageLabelsBtn" style="display:none">Manage labels</button>
+        <button id="cancelBtn" style="display:none">Cancel</button>
+        <button id="saveBtn" class="primary" style="display:none">Save changes</button>
+        <button id="editBtn" class="primary">Edit board</button>
+      </div>
+    </div>
+
+    <div class="board" id="board">
+      <div class="column" data-col="bugs">
+        <div class="column-header">
+          <span class="col-status-icon"></span>
+          <span class="column-title">Known bugs</span>
+          <span class="column-count" data-count-for="bugs">0</span>
+          <div class="column-actions">
+            <button class="add-here" title="Add card" data-add="bugs">+</button>
+          </div>
+        </div>
+        <div class="cards" data-col="bugs"></div>
+        <button class="add-card" data-add="bugs">+ Add card</button>
+      </div>
+      <div class="column" data-col="roadmap">
+        <div class="column-header">
+          <span class="col-status-icon"></span>
+          <span class="column-title">Roadmap</span>
+          <span class="column-count" data-count-for="roadmap">0</span>
+          <div class="column-actions">
+            <button class="add-here" title="Add card" data-add="roadmap">+</button>
+          </div>
+        </div>
+        <div class="cards" data-col="roadmap"></div>
+        <button class="add-card" data-add="roadmap">+ Add card</button>
+      </div>
+      <div class="column" data-col="completed">
+        <div class="column-header">
+          <span class="col-status-icon"></span>
+          <span class="column-title">Completed</span>
+          <span class="column-count" data-count-for="completed">0</span>
+          <div class="column-actions">
+            <button class="add-here" title="Add card" data-add="completed">+</button>
+          </div>
+        </div>
+        <div class="cards" data-col="completed"></div>
+        <button class="add-card" data-add="completed">+ Add card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password modal -->
+  <div class="modal-overlay" id="pwModal">
+    <div class="modal">
+      <h2>Enter password</h2>
+      <p>Editing is protected. Enter the password to make changes.</p>
+      <input type="password" id="pwInput" class="modal-input" placeholder="Password" autocomplete="off">
+      <div class="error-msg" id="pwError"></div>
+      <div class="modal-actions">
+        <button id="pwCancel">Cancel</button>
+        <button id="pwSubmit" class="primary">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Label manager modal -->
+  <div class="modal-overlay" id="labelModal">
+    <div class="modal" style="width: min(500px, 92vw);">
+      <h2>Manage labels</h2>
+      <p>Add, rename, recolor, or delete labels. Changes apply when you save.</p>
+      <div class="label-manager" id="labelManager"></div>
+      <button id="addLabelBtn" style="width: 100%; justify-content: center;">+ Add label</button>
+      <div class="modal-actions">
+        <button id="labelDone" class="primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme switcher -->
+  <button class="theme-fab" id="themeFab" title="Theme settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 3a9 9 0 0 0 0 18 4.5 4.5 0 0 1 0-9 4.5 4.5 0 0 0 0-9z" fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="theme-panel" id="themePanel">
+    <h3>Theme</h3>
+    <div class="theme-toggle" id="themeToggle">
+      <button data-mode="light" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        Light
+      </button>
+      <button data-mode="dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        Dark
+      </button>
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span>Hue</span><span class="value" id="hueValue">230°</span></div>
+      <input type="range" class="slider hue" id="hueSlider" min="0" max="360" value="230">
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span>Intensity</span><span class="value" id="intensityValue">30%</span></div>
+      <input type="range" class="slider" id="intensitySlider" min="0" max="100" value="30">
+    </div>
+    <button class="reset" id="themeReset">Reset to defaults</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+    // ============ CONFIG ============
+  // Replace with your deployed Worker URL, e.g. "https://kanban-worker.yourname.workers.dev"
+  const WORKER_URL = "https://kanban-worker.jamesdarin.workers.dev";
+
+  const COLORS = ["red", "orange", "yellow", "green", "teal", "blue", "violet", "pink", "gray"];
+
+  // ============ THEME ============
+  const THEME_KEY = "kanban_theme_v1";
+  const THEME_DEFAULTS = { mode: "light", hue: 230, intensity: 30 };
+  let theme = loadTheme();
+
+  function loadTheme() {
+    try {
+      const raw = localStorage.getItem(THEME_KEY);
+      if (raw) {
+        const t = JSON.parse(raw);
+        return {
+          mode: t.mode === "dark" ? "dark" : "light",
+          hue: clamp(parseInt(t.hue, 10), 0, 360, 230),
+          intensity: clamp(parseInt(t.intensity, 10), 0, 100, 30)
+        };
+      }
+    } catch (e) {}
+    return { ...THEME_DEFAULTS };
+  }
+  function saveTheme() {
+    try { localStorage.setItem(THEME_KEY, JSON.stringify(theme)); } catch (e) {}
+  }
+  function clamp(n, lo, hi, fallback) {
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(hi, Math.max(lo, n));
+  }
+
+  // Generate the full theme from (mode, hue, intensity) and write CSS vars.
+  // intensity 0 = neutral gray UI; 100 = strongly tinted with the hue.
+  function applyTheme() {
+    const root = document.documentElement;
+    const isDark = theme.mode === "dark";
+    document.body.classList.toggle("theme-dark", isDark);
+    document.body.classList.toggle("theme-light", !isDark);
+
+    const h = theme.hue;
+    const s = theme.intensity; // 0–100, sat % for backgrounds
+    const accentSat = 60 + s * 0.25; // accent is always reasonably saturated
+    const accentLight = isDark ? 65 : 58;
+    const accentHoverLight = isDark ? 72 : 50;
+
+    // Background ramp — very subtle saturation tied to intensity
+    const bgSat = s * 0.18;  // bg saturation: 0–18%
+    const bgSat2 = s * 0.12; // less-saturated cousin for borders/text
+
+    let v;
+    if (isDark) {
+      v = {
+        '--bg':            hsl(h, bgSat, 4),
+        '--bg-2':          hsl(h, bgSat, 6),
+        '--bg-3':          hsl(h, bgSat, 9),
+        '--bg-hover':      hsl(h, bgSat, 11),
+        '--surface':       hsl(h, bgSat, 6.5),
+        '--surface-2':     hsl(h, bgSat, 9.5),
+        '--border':        hsl(h, bgSat2, 14),
+        '--border-2':      hsl(h, bgSat2, 18),
+        '--border-strong': hsl(h, bgSat2, 25),
+        '--text':          hsl(h, bgSat2, 97),
+        '--text-2':        hsl(h, bgSat2, 73),
+        '--text-3':        hsl(h, bgSat2, 56),
+        '--text-4':        hsl(h, bgSat2, 40),
+        '--shadow-color':  '0, 0, 0',
+      };
+    } else {
+      v = {
+        '--bg':            hsl(h, bgSat * 0.5, 100),
+        '--bg-2':          hsl(h, bgSat, 98.5),
+        '--bg-3':          hsl(h, bgSat, 96),
+        '--bg-hover':      hsl(h, bgSat, 93),
+        '--surface':       hsl(h, bgSat * 0.5, 100),
+        '--surface-2':     hsl(h, bgSat, 97.5),
+        '--border':        hsl(h, bgSat2, 90),
+        '--border-2':      hsl(h, bgSat2, 84),
+        '--border-strong': hsl(h, bgSat2, 70),
+        '--text':          hsl(h, bgSat2, 11),
+        '--text-2':        hsl(h, bgSat2, 28),
+        '--text-3':        hsl(h, bgSat2, 45),
+        '--text-4':        hsl(h, bgSat2, 62),
+        '--shadow-color':  '16, 24, 40',
+      };
+    }
+    v['--accent']        = `hsl(${h}, ${accentSat}%, ${accentLight}%)`;
+    v['--accent-hover']  = `hsl(${h}, ${accentSat}%, ${accentHoverLight}%)`;
+    v['--accent-soft']   = `hsla(${h}, ${accentSat}%, ${accentLight}%, ${isDark ? 0.16 : 0.10})`;
+    v['--danger']        = isDark ? '#eb5757' : '#d93f3f';
+    v['--success']       = isDark ? '#4cb782' : '#2f9e6b';
+
+    for (const [k, val] of Object.entries(v)) root.style.setProperty(k, val);
+
+    // Update UI controls
+    document.getElementById('hueValue').textContent = h + '°';
+    document.getElementById('intensityValue').textContent = s + '%';
+    document.querySelectorAll('#themeToggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === theme.mode);
+    });
+  }
+  function hsl(h, s, l) { return `hsl(${h}, ${s}%, ${l}%)`; }
+
+  // ============ STATE ============
+  let state = {
+    labels: [],
+    columns: { bugs: [], roadmap: [], completed: [] },
+    nextCardId: 1,
+    savedAt: null
+  };
+  let isEditing = false;
+  let stateBeforeEdit = null;
+  let editPassword = null;
+  let draggedCard = null;
+  let openPicker = null;
+
+  // ============ API ============
+  async function fetchState() {
+    try {
+      setMode('loading');
+      const res = await fetch(WORKER_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      state = normalize(data);
+      setMode('live');
+      render();
+    } catch (e) {
+      console.error(e);
+      setMode('error');
+      toast('Could not load board: ' + e.message, true);
+    }
+  }
+
+  async function pushState(pw) {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Edit-Password': pw },
+      body: JSON.stringify(state)
+    });
+    if (res.status === 401) throw new Error('Unauthorized');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.savedAt) state.savedAt = data.savedAt;
+    return true;
+  }
+
+  function normalize(s) {
+    if (!s || typeof s !== 'object') s = {};
+    const labels = Array.isArray(s.labels) ? s.labels.map(l => ({
+      id: String(l.id || ''),
+      name: String(l.name || 'Untitled'),
+      color: COLORS.includes(l.color) ? l.color : 'gray'
+    })).filter(l => l.id) : [];
+    const cols = s.columns && typeof s.columns === 'object' ? s.columns : {};
+    const cleanCol = arr => Array.isArray(arr) ? arr.map(c => ({
+      id: String(c.id || ('card_' + Math.random().toString(36).slice(2, 10))),
+      title: String(c.title || ''),
+      labels: Array.isArray(c.labels) ? c.labels.map(String) : []
+    })) : [];
+    return {
+      labels,
+      columns: {
+        bugs: cleanCol(cols.bugs),
+        roadmap: cleanCol(cols.roadmap),
+        completed: cleanCol(cols.completed)
+      },
+      nextCardId: typeof s.nextCardId === 'number' ? s.nextCardId : 1,
+      savedAt: s.savedAt || null
+    };
+  }
+
+  function labelById(id) {
+    return state.labels.find(l => l.id === id);
+  }
+  function nextCardId() {
+    const n = state.nextCardId || 1;
+    state.nextCardId = n + 1;
+    return 'card_' + Date.now() + '_' + n;
+  }
+  function nextCardDisplayId(col, idx) {
+    // Stable display IDs based on creation order across the board
+    const all = [
+      ...state.columns.bugs,
+      ...state.columns.roadmap,
+      ...state.columns.completed
+    ];
+    return 'KB-' + (all.findIndex(c => c.id === state.columns[col][idx].id) + 1);
+  }
+  function newLabelId() {
+    return 'lbl_' + Math.random().toString(36).slice(2, 10);
+  }
+
+  // ============ RENDER ============
+  function render() {
+    closePicker();
+    document.body.classList.toggle('editing', isEditing);
+    ['bugs', 'roadmap', 'completed'].forEach(col => {
+      const container = document.querySelector(`.cards[data-col="${col}"]`);
+      container.innerHTML = '';
+      const cards = state.columns[col];
+      if (cards.length === 0 && !isEditing) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-col';
+        empty.textContent = 'No items';
+        container.appendChild(empty);
+      } else {
+        cards.forEach((card, idx) => container.appendChild(buildCard(card, col, idx)));
+      }
+      document.querySelector(`[data-count-for="${col}"]`).textContent = cards.length;
+    });
+    const total = state.columns.bugs.length + state.columns.roadmap.length + state.columns.completed.length;
+    document.getElementById('totalCount').textContent = total;
+    updateMeta();
+  }
+
+  function buildCard(card, col, idx) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.col = col;
+    el.dataset.idx = idx;
+    el.dataset.cardId = card.id;
+    el.draggable = isEditing;
+
+    // ID row
+    const idRow = document.createElement('div');
+    idRow.className = 'card-id';
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'card-id-icon';
+    idRow.appendChild(iconSpan);
+    const idText = document.createElement('span');
+    idText.textContent = nextCardDisplayId(col, idx);
+    idRow.appendChild(idText);
+    el.appendChild(idRow);
+
+    // Title
+    const title = document.createElement('div');
+    title.className = 'card-title';
+    title.textContent = card.title || 'Untitled';
+    el.appendChild(title);
+
+    // Labels
+    if (card.labels && card.labels.length > 0) {
+      const labelsRow = document.createElement('div');
+      labelsRow.className = 'card-labels';
+      card.labels.forEach(lid => {
+        const lbl = labelById(lid);
+        if (!lbl) return;
+        const pill = document.createElement('span');
+        pill.className = 'label-pill';
+        pill.dataset.color = lbl.color;
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        pill.appendChild(dot);
+        pill.appendChild(document.createTextNode(lbl.name));
+        labelsRow.appendChild(pill);
+      });
+      el.appendChild(labelsRow);
+    }
+
+    if (isEditing) {
+      const actions = document.createElement('div');
+      actions.className = 'card-actions';
+
+      const labelBtn = document.createElement('button');
+      labelBtn.title = 'Edit labels';
+      labelBtn.textContent = '#';
+      labelBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showLabelPicker(el, card);
+      });
+
+      const editBtn = document.createElement('button');
+      editBtn.title = 'Edit title';
+      editBtn.innerHTML = '&#9998;';
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        startInlineEdit(el, title, card);
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'del';
+      delBtn.title = 'Delete';
+      delBtn.textContent = '×';
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.columns[col].splice(idx, 1);
+        render();
+      });
+
+      actions.appendChild(labelBtn);
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      el.appendChild(actions);
+
+      el.addEventListener('dragstart', (e) => {
+        draggedCard = { col, idx };
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', card.id); } catch(_) {}
+      });
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+        document.querySelectorAll('.cards.drag-over').forEach(c => c.classList.remove('drag-over'));
+        draggedCard = null;
+      });
+    }
+
+    return el;
+  }
+
+  function startInlineEdit(cardEl, titleEl, card) {
+    titleEl.contentEditable = 'true';
+    titleEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(titleEl);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    const finish = () => {
+      const newText = titleEl.textContent.trim();
+      const col = cardEl.dataset.col;
+      const idx = parseInt(cardEl.dataset.idx, 10);
+      if (newText) {
+        state.columns[col][idx].title = newText;
+      } else {
+        state.columns[col].splice(idx, 1);
+      }
+      render();
+    };
+    titleEl.addEventListener('blur', finish, { once: true });
+    titleEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); }
+      if (e.key === 'Escape') { e.preventDefault(); render(); }
+    });
+  }
+
+  // ============ LABEL PICKER ON CARD ============
+  function showLabelPicker(cardEl, card) {
+    closePicker();
+    const picker = document.createElement('div');
+    picker.className = 'label-picker';
+    state.labels.forEach(lbl => {
+      const item = document.createElement('div');
+      item.className = 'label-picker-item';
+      if (card.labels.includes(lbl.id)) item.classList.add('selected');
+
+      const dot = document.createElement('span');
+      dot.className = 'label-picker-dot';
+      dot.dataset.color = lbl.color;
+      item.appendChild(dot);
+
+      const name = document.createElement('span');
+      name.textContent = lbl.name;
+      item.appendChild(name);
+
+      const check = document.createElement('span');
+      check.className = 'check';
+      check.textContent = '✓';
+      item.appendChild(check);
+
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = card.labels.indexOf(lbl.id);
+        if (idx === -1) card.labels.push(lbl.id);
+        else card.labels.splice(idx, 1);
+        render();
+      });
+      picker.appendChild(item);
+    });
+
+    if (state.labels.length === 0) {
+      const note = document.createElement('div');
+      note.className = 'label-picker-item';
+      note.style.color = 'var(--text-4)';
+      note.textContent = 'No labels — add some first';
+      picker.appendChild(note);
+    }
+
+    // Position below the card
+    document.body.appendChild(picker);
+    const rect = cardEl.getBoundingClientRect();
+    picker.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+    picker.style.left = (rect.left + window.scrollX) + 'px';
+
+    openPicker = picker;
+
+    setTimeout(() => {
+      document.addEventListener('click', closePickerOnClickAway, { once: true });
+    }, 0);
+  }
+  function closePickerOnClickAway(e) {
+    if (openPicker && !openPicker.contains(e.target)) {
+      closePicker();
+    } else if (openPicker) {
+      document.addEventListener('click', closePickerOnClickAway, { once: true });
+    }
+  }
+  function closePicker() {
+    if (openPicker) { openPicker.remove(); openPicker = null; }
+  }
+
+  // ============ DRAG & DROP ============
+  function setupDropZones() {
+    document.querySelectorAll('.cards').forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        if (!isEditing || !draggedCard) return;
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', (e) => {
+        if (e.target === zone) zone.classList.remove('drag-over');
+      });
+      zone.addEventListener('drop', (e) => {
+        if (!isEditing || !draggedCard) return;
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const targetCol = zone.dataset.col;
+        const { col: srcCol, idx: srcIdx } = draggedCard;
+        const card = state.columns[srcCol][srcIdx];
+
+        const cards = [...zone.querySelectorAll('.card:not(.dragging)')];
+        let dropIdx = cards.length;
+        for (let i = 0; i < cards.length; i++) {
+          const rect = cards[i].getBoundingClientRect();
+          if (e.clientY < rect.top + rect.height / 2) {
+            dropIdx = parseInt(cards[i].dataset.idx, 10);
+            break;
+          }
+        }
+
+        state.columns[srcCol].splice(srcIdx, 1);
+        if (srcCol === targetCol && srcIdx < dropIdx) dropIdx--;
+        state.columns[targetCol].splice(dropIdx, 0, card);
+        draggedCard = null;
+        render();
+      });
+    });
+  }
+
+  // ============ LABEL MANAGER ============
+  function renderLabelManager() {
+    const container = document.getElementById('labelManager');
+    container.innerHTML = '';
+    state.labels.forEach((lbl, i) => {
+      const row = document.createElement('div');
+      row.className = 'label-row';
+
+      // Color swatch (cycles through colors on click, or opens mini-picker)
+      const swatchWrap = document.createElement('div');
+      swatchWrap.style.position = 'relative';
+
+      const swatch = document.createElement('div');
+      swatch.className = 'color-swatch active';
+      swatch.dataset.color = lbl.color;
+      swatch.title = 'Click to change color';
+      swatch.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Toggle a popover with all colors
+        const existing = swatchWrap.querySelector('.color-picker');
+        if (existing) { existing.remove(); return; }
+        const picker = document.createElement('div');
+        picker.className = 'color-picker';
+        picker.style.position = 'absolute';
+        picker.style.top = '24px'; picker.style.left = '0';
+        picker.style.zIndex = '60';
+        COLORS.forEach(c => {
+          const s = document.createElement('div');
+          s.className = 'color-swatch';
+          s.dataset.color = c;
+          if (c === lbl.color) s.classList.add('active');
+          s.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            lbl.color = c;
+            renderLabelManager();
+          });
+          picker.appendChild(s);
+        });
+        swatchWrap.appendChild(picker);
+        setTimeout(() => {
+          document.addEventListener('click', function close() {
+            picker.remove();
+          }, { once: true });
+        }, 0);
+      });
+      swatchWrap.appendChild(swatch);
+      row.appendChild(swatchWrap);
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'label-name-input';
+      input.value = lbl.name;
+      input.addEventListener('input', () => { lbl.name = input.value; });
+      row.appendChild(input);
+
+      const del = document.createElement('button');
+      del.textContent = '×';
+      del.className = 'danger';
+      del.style.cssText = 'padding: 0; width: 28px; height: 28px; font-size: 18px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;';
+      del.title = 'Delete label';
+      del.addEventListener('click', () => {
+        if (!confirm(`Delete label "${lbl.name}"? It will be removed from all cards.`)) return;
+        // Remove label from all cards
+        ['bugs', 'roadmap', 'completed'].forEach(col => {
+          state.columns[col].forEach(c => {
+            c.labels = c.labels.filter(id => id !== lbl.id);
+          });
+        });
+        state.labels.splice(i, 1);
+        renderLabelManager();
+        render();
+      });
+      row.appendChild(del);
+
+      container.appendChild(row);
+    });
+
+    if (state.labels.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'color: var(--text-4); text-align: center; padding: 16px; font-size: 12px;';
+      empty.textContent = 'No labels yet';
+      container.appendChild(empty);
+    }
+  }
+
+  // ============ MODE / UI ============
+  function setMode(m) {
+    const indicator = document.getElementById('modeIndicator');
+    if (m === 'loading') indicator.innerHTML = '<span class="status-dot loading"></span><span>Loading…</span>';
+    else if (m === 'editing') indicator.innerHTML = '<span class="status-dot editing"></span><span>Editing</span>';
+    else if (m === 'error') indicator.innerHTML = '<span class="status-dot error"></span><span>Offline</span>';
+    else indicator.innerHTML = '<span class="status-dot live"></span><span>Live</span>';
+  }
+
+  function updateMeta() {
+    const saved = state.savedAt ? new Date(state.savedAt) : null;
+    document.getElementById('lastSaved').textContent = saved
+      ? 'Updated ' + relativeTime(saved)
+      : 'Never saved';
+  }
+
+  function relativeTime(d) {
+    const diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+    return d.toLocaleDateString();
+  }
+
+  function toast(msg, isError) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.toggle('error', !!isError);
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function enterEditMode() {
+    isEditing = true;
+    stateBeforeEdit = JSON.parse(JSON.stringify(state));
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = '';
+    document.getElementById('cancelBtn').style.display = '';
+    document.getElementById('manageLabelsBtn').style.display = '';
+    setMode('editing');
+    render();
+    toast('Edit mode enabled');
+  }
+
+  function exitEditMode(savedOk) {
+    isEditing = false;
+    stateBeforeEdit = null;
+    document.getElementById('editBtn').style.display = '';
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('manageLabelsBtn').style.display = 'none';
+    setMode('live');
+    render();
+    if (savedOk === true) toast('Saved');
+    else if (savedOk === false) toast('Changes discarded');
+  }
+
+  // ============ MODAL ============
+  function openPwModal() {
+    document.getElementById('pwModal').classList.add('open');
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwError').textContent = '';
+    setTimeout(() => document.getElementById('pwInput').focus(), 50);
+  }
+  function closePwModal() {
+    document.getElementById('pwModal').classList.remove('open');
+  }
+  async function attemptUnlock() {
+    const val = document.getElementById('pwInput').value;
+    if (!val) {
+      document.getElementById('pwError').textContent = 'Enter a password';
+      return;
+    }
+    const btn = document.getElementById('pwSubmit');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      // Verify by attempting a save — wrong password returns 401
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Edit-Password': val },
+        body: JSON.stringify(state)
+      });
+      if (res.status === 401) {
+        document.getElementById('pwError').textContent = 'Incorrect password';
+        document.getElementById('pwInput').select();
+      } else if (!res.ok) {
+        document.getElementById('pwError').textContent = 'Server error (' + res.status + ')';
+      } else {
+        editPassword = val;
+        closePwModal();
+        enterEditMode();
+      }
+    } catch (e) {
+      document.getElementById('pwError').textContent = 'Network error';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Unlock';
+    }
+  }
+
+  function openLabelModal() {
+    renderLabelManager();
+    document.getElementById('labelModal').classList.add('open');
+  }
+  function closeLabelModal() {
+    document.getElementById('labelModal').classList.remove('open');
+    render(); // refresh card pills with any name/color changes
+  }
+
+  // ============ EVENTS ============
+  document.getElementById('editBtn').addEventListener('click', openPwModal);
+  document.getElementById('pwSubmit').addEventListener('click', attemptUnlock);
+  document.getElementById('pwCancel').addEventListener('click', closePwModal);
+  document.getElementById('pwInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') attemptUnlock();
+    if (e.key === 'Escape') closePwModal();
+  });
+  document.getElementById('pwModal').addEventListener('click', (e) => {
+    if (e.target.id === 'pwModal') closePwModal();
+  });
+
+  document.getElementById('manageLabelsBtn').addEventListener('click', openLabelModal);
+  document.getElementById('labelDone').addEventListener('click', closeLabelModal);
+  document.getElementById('labelModal').addEventListener('click', (e) => {
+    if (e.target.id === 'labelModal') closeLabelModal();
+  });
+  document.getElementById('addLabelBtn').addEventListener('click', () => {
+    state.labels.push({ id: newLabelId(), name: 'New label', color: COLORS[state.labels.length % COLORS.length] });
+    renderLabelManager();
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await pushState(editPassword);
+      exitEditMode(true);
+    } catch (e) {
+      if (e.message === 'Unauthorized') {
+        editPassword = null;
+        toast('Session expired — re-enter password', true);
+        openPwModal();
+      } else {
+        toast('Save failed: ' + e.message, true);
+      }
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save changes';
+    }
+  });
+
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    if (stateBeforeEdit) state = stateBeforeEdit;
+    exitEditMode(false);
+  });
+
+  document.querySelectorAll('[data-add]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!isEditing) return;
+      const col = btn.dataset.add;
+      const newCard = { id: nextCardId(), title: 'New item', labels: [] };
+      state.columns[col].push(newCard);
+      render();
+      requestAnimationFrame(() => {
+        const cards = document.querySelectorAll(`.cards[data-col="${col}"] .card`);
+        const last = cards[cards.length - 1];
+        if (last) {
+          const titleEl = last.querySelector('.card-title');
+          startInlineEdit(last, titleEl, newCard);
+        }
+      });
+    });
+  });
+
+  // ============ THEME SWITCHER UI ============
+  const themeFab = document.getElementById('themeFab');
+  const themePanel = document.getElementById('themePanel');
+  themeFab.addEventListener('click', (e) => {
+    e.stopPropagation();
+    themePanel.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (themePanel.classList.contains('open')
+        && !themePanel.contains(e.target)
+        && !themeFab.contains(e.target)) {
+      themePanel.classList.remove('open');
+    }
+  });
+  document.querySelectorAll('#themeToggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      theme.mode = btn.dataset.mode;
+      applyTheme(); saveTheme();
+    });
+  });
+  document.getElementById('hueSlider').addEventListener('input', (e) => {
+    theme.hue = parseInt(e.target.value, 10);
+    applyTheme(); saveTheme();
+  });
+  document.getElementById('intensitySlider').addEventListener('input', (e) => {
+    theme.intensity = parseInt(e.target.value, 10);
+    applyTheme(); saveTheme();
+  });
+  document.getElementById('themeReset').addEventListener('click', () => {
+    theme = { ...THEME_DEFAULTS };
+    document.getElementById('hueSlider').value = theme.hue;
+    document.getElementById('intensitySlider').value = theme.intensity;
+    applyTheme(); saveTheme();
+  });
+  // Sync slider positions to loaded theme
+  document.getElementById('hueSlider').value = theme.hue;
+  document.getElementById('intensitySlider').value = theme.intensity;
+  applyTheme();
+
+  // ============ INIT ============
+  setupDropZones();
+  fetchState();
+</script>
+</body>
+</html>
+
+
+
+
+
 
