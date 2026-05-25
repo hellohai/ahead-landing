@@ -152,27 +152,15 @@
       animation: fadeUp 0.8s ease 0.5s both;
     }
 
-    /* ── Demo video ──────────────────────────── */
-    .demo {
+    /* ── Hero image ──────────────────────────── */
+    .hero-image {
       width: 100%;
-      max-width: 560px;
+      max-width: 720px;
       margin: 56px auto 0;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow:
-        0 30px 60px -20px rgba(180, 120, 60, 0.28),
-        0 12px 28px -8px rgba(70, 50, 100, 0.18);
       animation: fadeUp 0.9s ease 0.6s both;
-      background: #1c1c2e;
-      aspect-ratio: 1184 / 666;
-      position: relative;
-    }
-
-    .demo video {
-      width: 100%;
-      height: 100%;
       display: block;
-      object-fit: cover;
+      filter: drop-shadow(0 30px 40px rgba(180, 120, 60, 0.18))
+              drop-shadow(0 12px 24px rgba(70, 50, 100, 0.12));
     }
 
     /* ── Feature section ─────────────────────── */
@@ -424,7 +412,7 @@
 
     @media (max-width: 520px) {
       body { padding: 40px 20px 60px; }
-      .demo { margin-top: 40px; border-radius: 18px; }
+      .hero-image { margin-top: 40px; }
       .features, .how { margin-top: 64px; }
     }
   </style>
@@ -461,19 +449,12 @@
 
     <p class="sub-note" id="subNote">Coming soon for iOS</p>
 
-    <!-- Demo video -->
-    <div class="demo">
-      <video
-        src="ahead-loop.mp4"
-        poster="poster.jpg"
-        autoplay
-        loop
-        muted
-        playsinline
-        preload="auto"
-        aria-label="Ahead app demo showing apps and shortcuts surfacing based on context"
-      ></video>
-    </div>
+    <!-- Hero image -->
+    <img
+      class="hero-image"
+      src="ahead-landing.png"
+      alt="Three iPhones showing the Ahead app: a daily snapshot screen, the Tame the chaos welcome screen, and the icon picker."
+    />
 
     <!-- What it is -->
     <section class="features">
