@@ -80,76 +80,50 @@
       animation: fadeUp 0.8s ease 0.3s both;
     }
 
-    .form-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      width: 100%;
-      max-width: 420px;
-      background: #fff;
-      border-radius: 14px;
-      border: 1px solid var(--input-border);
-      box-shadow: 0 2px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-      overflow: hidden;
-      transition: box-shadow 0.2s;
+    /* ── Download button ─────────────────────── */
+    .store-badge {
+      display: inline-block;
       animation: fadeUp 0.8s ease 0.4s both;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+      filter: drop-shadow(0 6px 18px rgba(28, 28, 46, 0.18));
     }
 
-    .form-wrap:focus-within {
-      box-shadow: 0 4px 28px rgba(245,169,78,0.18), 0 1px 3px rgba(0,0,0,0.04);
-      border-color: #f5c98a;
+    .store-badge img {
+      height: 54px;
+      display: block;
     }
 
-    .email-input {
-      flex: 1;
-      padding: 15px 18px;
-      border: none;
-      outline: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--text-dark);
-      background: transparent;
+    .store-badge:hover {
+      transform: translateY(-3px) scale(1.03);
+      filter: drop-shadow(0 12px 26px rgba(28, 28, 46, 0.26));
     }
 
-    .email-input::placeholder { color: #bbb8cc; }
-
-    .submit-btn {
-      width: 44px;
-      height: 44px;
-      margin: 5px;
-      flex-shrink: 0;
-      border: none;
-      border-radius: 10px;
-      background: var(--peach-btn);
-      color: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.18s, transform 0.1s;
-    }
-
-    .submit-btn:hover { background: #f09a30; }
-    .submit-btn:active { transform: scale(0.95); }
-    .submit-btn:disabled { background: #ddd; cursor: not-allowed; }
-
-    .submit-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke: #fff;
-      fill: none;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .store-badge:active {
+      transform: translateY(-1px) scale(1.01);
     }
 
     .sub-note {
-      margin-top: 14px;
+      margin-top: 16px;
       font-size: 13px;
       color: var(--text-muted);
       letter-spacing: 0.1px;
       animation: fadeUp 0.8s ease 0.5s both;
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4cc37a;
+      margin-right: 7px;
+      vertical-align: 1px;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(76, 195, 122, 0.45); }
+      50%      { box-shadow: 0 0 0 6px rgba(76, 195, 122, 0); }
     }
 
     /* ── Hero image ──────────────────────────── */
@@ -157,17 +131,43 @@
       width: 100%;
       max-width: 720px;
       margin: 56px auto 0;
-      animation: fadeUp 0.9s ease 0.6s both;
+      animation: fadeUp 0.9s ease 0.6s both, float 7s ease-in-out 1.5s infinite;
       display: block;
       filter: drop-shadow(0 30px 40px rgba(180, 120, 60, 0.18))
               drop-shadow(0 12px 24px rgba(70, 50, 100, 0.12));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ── Scroll reveal ───────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--reveal-delay, 0s);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
     }
 
     /* ── Feature section ─────────────────────── */
     .features {
       margin-top: 88px;
       width: 100%;
-      animation: fadeUp 0.9s ease 0.7s both;
     }
 
     .features-eyebrow {
@@ -272,7 +272,6 @@
       margin-top: 88px;
       width: 100%;
       text-align: left;
-      animation: fadeUp 0.9s ease 0.8s both;
     }
 
     .how-inner {
@@ -356,59 +355,7 @@
       margin-top: 88px;
       font-size: 13px;
       color: var(--text-muted);
-      animation: fadeUp 0.9s ease 0.9s both;
     }
-
-    /* Success state */
-    .success-state {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      animation: fadeUp 0.5s ease both;
-    }
-
-    .success-state.visible { display: flex; }
-
-    .success-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f5c97a, #f5a94e);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-    }
-
-    .success-icon svg {
-      width: 22px; height: 22px;
-      stroke: #fff; fill: none;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .success-state h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      font-weight: 400;
-      color: var(--text-dark);
-    }
-
-    .success-state p {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    /* Error */
-    .error-text {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #e05252;
-      display: none;
-    }
-    .error-text.visible { display: block; }
 
     @media (max-width: 520px) {
       body { padding: 40px 20px 60px; }
@@ -424,30 +371,17 @@
     <h1>Ahead for iOS</h1>
     <p class="tagline">Everybody's life looks differently.<br>Your software should too.</p>
 
-    <div class="form-wrap" id="formWrap">
-      <input
-        class="email-input"
-        type="email"
-        id="emailInput"
-        placeholder="Enter your email"
-        autocomplete="email"
-      />
-      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
-    </div>
+    <a
+      class="store-badge"
+      href="https://apps.apple.com/us/app/ahead-never-miss-whats-next/id6770061586"
+      target="_blank"
+      rel="noopener"
+      aria-label="Download Ahead on the App Store"
+    >
+      <img src="app-store-badge.svg" alt="Download on the App Store" />
+    </a>
 
-    <p class="error-text" id="errorText">Something went wrong. Please try again.</p>
-
-    <div class="success-state" id="successState">
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <h2>You're on the list!</h2>
-      <p>We'll let you know the moment Ahead launches.</p>
-    </div>
-
-    <p class="sub-note" id="subNote">Coming soon for iOS</p>
+    <p class="sub-note"><span class="live-dot"></span>Now available for iOS</p>
 
     <!-- Hero image -->
     <img
@@ -457,59 +391,59 @@
     />
 
     <!-- What it is -->
-    <section class="features">
+    <section class="features reveal">
       <div class="features-eyebrow">What is Ahead</div>
       <h2 class="features-headline">A home screen that reshapes itself around the moment you're in.</h2>
       <p class="features-sub">
-        Health, Reminders, Calendar and Email. Ahead surfaces what's coming up — and quietly hides what isn't.
+        Your phone shouldn't show you the same 24 apps whether you're at the gym, in a meeting, or winding down. Ahead surfaces the apps, shortcuts, and actions that actually fit right now — and quietly hides the ones that don't.
       </p>
 
       <div class="feature-grid">
-        <div class="feature">
+        <div class="feature reveal" style="--reveal-delay: 0.05s">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
           </div>
           <h3>Context-aware</h3>
-          <p>Time of day, calendar, and habits shape what you see.</p>
+          <p>Time of day, location, calendar, and habits shape what you see — no manual switching.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal" style="--reveal-delay: 0.15s">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg>
           </div>
           <h3>Built around you</h3>
           <p>The more you use it, the better it gets at predicting what you actually need next.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal" style="--reveal-delay: 0.25s">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           </div>
-          <h3>Anchor your day</h3>
-          <p>Surface shortcuts without digging through folders.</p>
+          <h3>One tap, done</h3>
+          <p>Surface a shortcut, an action, or a full workflow without digging through folders.</p>
         </div>
       </div>
     </section>
 
     <!-- How it works -->
-    <section class="how">
+    <section class="how reveal">
       <div class="how-inner">
         <div class="how-eyebrow">How it works</div>
         <h3 class="how-headline">Tame the chaos in three small steps.</h3>
         <ol class="steps">
-          <li class="step">
+          <li class="step reveal" style="--reveal-delay: 0.05s">
             <div class="step-num"></div>
             <div class="step-body">
               <h4>Tell Ahead about your day</h4>
               <p>A quick setup so Ahead knows what work, focus, and downtime look like for you.</p>
             </div>
           </li>
-          <li class="step">
+          <li class="step reveal" style="--reveal-delay: 0.15s">
             <div class="step-num"></div>
             <div class="step-body">
               <h4>Let your home screen breathe</h4>
               <p>Ahead arranges apps and shortcuts to match the context, so the right thing is always one tap away.</p>
             </div>
           </li>
-          <li class="step">
+          <li class="step reveal" style="--reveal-delay: 0.25s">
             <div class="step-num"></div>
             <div class="step-body">
               <h4>Adjust whenever you want</h4>
@@ -520,58 +454,21 @@
       </div>
     </section>
 
-    <p class="footer">© Ahead · Coming soon for iOS</p>
+    <p class="footer reveal">© Ahead · Available now on the App Store</p>
   </div>
 
   <script>
-    // ─── CONFIGURATION ───────────────────────────────────────────────
-    // Paste your Google Apps Script Web App URL here:
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1unQJ6nN4dNOAO81VmPV5LK4ejhHOtQ38rdVOi6bU431CKlffxE3xlefSmA16HSidAA/exec';
-    // ─────────────────────────────────────────────────────────────────
+    // Scroll-reveal: fade sections in as they enter the viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-    async function handleSubmit() {
-      const email = document.getElementById('emailInput').value.trim();
-      const btn = document.getElementById('submitBtn');
-      const errorText = document.getElementById('errorText');
-
-      errorText.classList.remove('visible');
-
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('emailInput').style.color = '#e05252';
-        setTimeout(() => document.getElementById('emailInput').style.color = '', 600);
-        return;
-      }
-
-      btn.disabled = true;
-
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            timestamp: new Date().toISOString(),
-            source: window.location.href
-          })
-        });
-
-        // Show success (no-cors means we can't read response, assume success)
-        document.getElementById('formWrap').style.display = 'none';
-        document.getElementById('subNote').style.display = 'none';
-        document.getElementById('successState').classList.add('visible');
-
-      } catch (e) {
-        btn.disabled = false;
-        errorText.classList.add('visible');
-      }
-    }
-
-    window.addEventListener('load', () => document.getElementById('emailInput').focus());
-
-    document.getElementById('emailInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') handleSubmit();
-    });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
