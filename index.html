@@ -12,7 +12,7 @@
   <link rel="icon" href="assets/icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     /* Layout: one column that opens as the app's own night stage and brightens into paper;
        each section is one moment of the app, rebuilt live rather than screenshotted. */
@@ -33,7 +33,6 @@
       --sky-midday-top: #d9e5f7;  --sky-midday-mid: #edf0f6;  --sky-midday-glow: rgba(255, 237, 191, 0.70);
       --sky-evening-top: #cfc2e6; --sky-evening-mid: #eae5f1; --sky-evening-glow: rgba(255, 150, 130, 0.45);
       --font-display: 'Outfit', ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --font-serif: 'Newsreader', 'New York', Georgia, 'Times New Roman', serif;
       --font-body: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
       --max: 1120px;
       --gutter: 24px;
@@ -59,7 +58,6 @@
     a { color: inherit; }
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     .wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
-    .eyebrow { font-family: var(--font-body); font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tint); }
     h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 4.6vw, 54px); line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance; }
     .lede { font-size: clamp(17px, 1.6vw, 20px); color: var(--soft); max-width: 36em; font-weight: 300; line-height: 1.6; }
     .lede b { font-weight: 500; color: var(--ink); }
@@ -106,7 +104,7 @@
     }
     .stage-copy { text-align: center; padding: calc(64px + env(safe-area-inset-top, 0px)) var(--gutter) 0; position: relative; z-index: 4; }
     .stage h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(40px, 7vw, 78px); line-height: 1.0; letter-spacing: -0.025em; text-wrap: balance; max-width: 12ch; margin: 0 auto; }
-    .stage .sub { font-family: var(--font-serif); font-style: italic; font-size: clamp(19px, 2.3vw, 26px); line-height: 1.35; color: rgba(255, 255, 255, 0.80); max-width: 30em; margin: 18px auto 0; text-wrap: balance; }
+    .stage .sub { font-size: clamp(17px, 1.8vw, 21px); line-height: 1.5; font-weight: 300; color: rgba(255, 255, 255, 0.78); max-width: 30em; margin: 18px auto 0; text-wrap: balance; }
     .cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 20px; margin-top: 28px; }
     .badge img { height: 52px; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45)); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .badge:hover img { transform: translateY(-2px) scale(1.03); }
@@ -149,7 +147,7 @@
     @keyframes flare { 0% { opacity: 0; transform: scale(0.4); } 30% { opacity: 0.9; } 100% { opacity: 0; transform: scale(1.6); } }
     .hint { font-size: 13px; color: rgba(255, 255, 255, 0.55); letter-spacing: 0.01em; transition: opacity 0.3s; }
     .stage.done .hint { opacity: 0; }
-    .here { position: absolute; left: 50%; top: calc(100% + 10px); translate: -50% 0; white-space: nowrap; font-family: var(--font-serif); font-style: italic; font-size: 22px; opacity: 0; }
+    .here { position: absolute; left: 50%; top: calc(100% + 10px); translate: -50% 0; white-space: nowrap; font-family: var(--font-display); font-weight: 600; font-size: 20px; opacity: 0; }
     .stage.done .here { animation: rise 0.6s ease 0.25s both; }
 
     /* load-in */
@@ -185,7 +183,7 @@
     .moment .line { font-size: 14px; color: var(--soft); font-variant-numeric: tabular-nums; display: flex; flex-wrap: wrap; gap: 0 6px; }
     .moment .line span:not(.dots) { white-space: nowrap; }
     .moment .dots { letter-spacing: 1px; margin-right: 6px; }
-    .moment .opener { font-family: var(--font-serif); font-style: italic; font-size: clamp(24px, 3.1vw, 34px); line-height: 1.25; color: var(--ink); text-wrap: pretty; margin-top: 8px; }
+    .moment .opener { font-size: clamp(19px, 2.2vw, 24px); line-height: 1.4; font-weight: 400; color: var(--ink); text-wrap: pretty; margin-top: 8px; }
     .moment .beats { display: grid; gap: 8px; margin-top: 14px; }
     .moment .beat { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 10px 14px; font-size: 15px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
     .moment .beat img { width: 28px; height: 28px; }
@@ -215,6 +213,7 @@
       z-index: calc(10 - var(--n)); opacity: calc(1 - var(--n) * 0.18);
     }
     .card.drag { transition: none; cursor: grabbing; }
+    .card.drag, .card.lift, .card.gone { z-index: 30; }
     .card.gone { transition: transform 0.4s ease-in, opacity 0.3s; opacity: 0; pointer-events: none; }
     .card .glyph { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--paper-2); flex: none; }
     .card .glyph img { width: 30px; height: 30px; }
@@ -224,8 +223,9 @@
     .card .when { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
     .card .when b { color: var(--soft); font-weight: 500; }
     .card .when em { font-style: normal; color: var(--tint); font-weight: 500; }
-    .thumbs { position: absolute; inset: 50px 12px auto; height: 92px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 0;
-      background: var(--mood, transparent); transition: background 0.2s; }
+    .thumbs { position: absolute; inset: 50px 12px auto; height: 92px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 15; opacity: 0; pointer-events: none;
+      background: var(--mood, transparent); transition: background 0.2s, opacity 0.15s; }
+    .plate.live .thumbs { opacity: 1; }
     .thumbs img { width: 32px; height: 32px; opacity: var(--o, 0); scale: calc(0.6 + 0.4 * var(--o, 0)); transition: opacity 0.15s, scale 0.15s; }
     .checks { display: flex; justify-content: center; gap: 22px; margin-top: 16px; font-size: 13px; color: var(--soft); }
     .checks span { display: inline-flex; align-items: center; gap: 6px; }
@@ -283,10 +283,10 @@
     .post .inner { max-width: 62ch; margin: 0 auto; }
     .post h2 { text-align: center; margin-top: 14px; }
     .post .date { text-align: center; font-size: 14px; color: var(--muted); margin-top: 10px; }
-    .post .pull { font-family: var(--font-serif); font-style: italic; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.25; text-align: center; color: var(--ink); margin: 40px auto 48px; max-width: 22ch; text-wrap: balance; }
+    .post .pull { font-family: var(--font-display); font-weight: 600; font-size: clamp(24px, 3vw, 32px); line-height: 1.2; letter-spacing: -0.01em; text-align: center; color: var(--ink); margin: 40px auto 48px; max-width: 22ch; text-wrap: balance; }
     .post h3 { font-family: var(--font-display); font-weight: 600; font-size: 24px; letter-spacing: -0.01em; margin: 40px 0 10px; line-height: 1.2; }
     .post p { font-size: 18px; line-height: 1.7; color: var(--ink); margin-bottom: 18px; font-weight: 300; }
-    .post .sig { font-family: var(--font-serif); font-style: italic; font-size: 22px; margin-top: 4px; }
+    .post .sig { font-weight: 500; font-size: 18px; margin-top: 4px; }
     .post .cta { justify-content: flex-start; margin-top: 36px; }
     .post .badge img { filter: drop-shadow(0 8px 20px var(--shadow)); }
 
@@ -299,7 +299,7 @@
 <body>
 
   <nav class="bar" id="bar" aria-label="Site">
-    <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="28" height="28" /> Ahead</a>
+    <a class="brand" href="#top"><picture><source srcset="assets/icon-dark.png" media="(prefers-color-scheme: dark)" /><img src="assets/icon.png" alt="" width="28" height="28" /></picture> Ahead</a>
     <a class="get" href="https://apps.apple.com/us/app/ahead-never-miss-whats-next/id6770061586" target="_blank" rel="noopener">Get Ahead, free</a>
   </nav>
 
@@ -339,7 +339,6 @@
       </div>
       <div class="day-inner">
         <div class="copy">
-          <span class="eyebrow">Three times a day</span>
           <h2>The 8 AM you and the 8 PM you need different things.</h2>
           <p class="lede">Ahead checks in at <b>7</b>, <b>11</b> and <b>4</b>. Each one reads what's coming and how you slept, then says what matters now, in a sentence or two it writes on your phone.</p>
           <div class="moment-nav" role="tablist" aria-label="Check-ins">
@@ -385,7 +384,6 @@
   <section class="section" id="coming" aria-label="Coming up">
     <div class="wrap split">
       <div class="copy reveal">
-        <span class="eyebrow">Coming up</span>
         <h2>Swipe to shape it.</h2>
         <p class="lede">Right for <b>more of this</b>. Left for <b>less</b>. Ahead learns who and what comes first for you, and keeps all of it on your phone. Try it.</p>
       </div>
@@ -426,7 +424,6 @@
         <span class="alt">Or just remind me the week before</span>
       </div>
       <div class="copy reveal">
-        <span class="eyebrow">Get ahead of it</span>
         <h2>It remembers last year.</h2>
         <p class="lede">Thanksgiving, a wedding, a trip. When one is close enough to plan for, Ahead brings back what you did around it last year and offers it as reminders, dated the same distance before. <b>Nothing invented.</b> With no history, it just asks when to remind you.</p>
       </div>
@@ -437,7 +434,6 @@
   <section class="section" id="private" aria-label="Privacy">
     <div class="wrap">
       <div class="copy reveal" style="max-width: 44em">
-        <span class="eyebrow">On your iPhone</span>
         <h2>Nothing leaves your iPhone.</h2>
         <p class="lede">No account to make. No servers to trust. Your day is written on the phone, by Apple Intelligence where it's available and from the facts everywhere else. The one exception is your location, sent to Apple once, for the weather.</p>
       </div>
@@ -453,7 +449,7 @@
   <!-- Screens -->
   <section class="section" id="screens" aria-label="Screens" style="padding-top: 0">
     <div class="wrap">
-      <div class="copy reveal" style="margin-bottom: 8px"><span class="eyebrow">The app</span><h2>Three check‑ins, one app.</h2></div>
+      <div class="copy reveal" style="margin-bottom: 8px"><h2>Three check‑ins, one app.</h2></div>
       <div class="strip">
         <figure class="shot reveal"><div class="phone"><img src="assets/screens/welcome.webp" alt="The welcome screen: What matters, three times a day" loading="lazy" /></div><figcaption>Press and hold to begin.</figcaption></figure>
         <figure class="shot reveal"><div class="phone"><img src="assets/screens/feed.webp" alt="The morning check-in with the Coming up list and health tiles" loading="lazy" /></div><figcaption>The morning, put together.</figcaption></figure>
@@ -466,7 +462,6 @@
   <!-- The post -->
   <article class="post" id="post">
     <div class="wrap inner">
-      <div class="reveal" style="text-align:center"><span class="eyebrow">From James</span></div>
       <h2 class="reveal">(Re)introducing Ahead for iOS</h2>
       <p class="date reveal">October 2026</p>
       <p class="pull reveal">Good design is figuring out what needs to be removed.</p>
@@ -584,7 +579,7 @@
     }));
 
     // ── Coming up: the deck ──
-    const stack = $('#stack'), thumbs = $('#thumbs'), tUp = $('#tUp'), tDown = $('#tDown'), why = $('#why');
+    const stack = $('#stack'), plate = $('.plate'), thumbs = $('#thumbs'), tUp = $('#tUp'), tDown = $('#tDown'), why = $('#why');
     const COMMIT = 92; let didR = false, didL = false, didT = false;
     const checks = { r: $('#cRight'), l: $('#cLeft'), t: $('#cTap') };
     function relayout() { $$('.card:not(.gone)', stack).forEach((c, i) => c.style.setProperty('--n', Math.min(i, 3))); }
@@ -592,11 +587,12 @@
     function mood(dx) {
       const up = Math.min(1, Math.max(0, (dx - 20) / 70)), down = Math.min(1, Math.max(0, (-dx - 20) / 70));
       thumbs.style.setProperty('--mood', Math.abs(dx) > 4 ? (dx > 0 ? 'rgba(46,140,87,0.95)' : 'rgba(181,74,61,0.95)') : 'transparent');
+      plate.classList.toggle('live', Math.abs(dx) > 4);
       tUp.style.setProperty('--o', up); tDown.style.setProperty('--o', down);
     }
     function commit(dir) {
       const c = topCard(); if (!c) return;
-      c.classList.remove('drag'); c.classList.add('gone'); c.style.transform = `translateX(${dir * 130}%) rotate(${dir * 8}deg)`;
+      c.classList.remove('drag', 'lift'); c.classList.add('gone'); c.style.transform = `translateX(${dir * 130}%) rotate(${dir * 8}deg)`;
       mood(0); why.classList.remove('on');
       const name = c.dataset.name;
       if (dir > 0) { say(`More of this: ${name[0].toUpperCase() + name.slice(1)}`); if (!didR) { didR = true; checks.r.classList.add('did'); } }
@@ -607,7 +603,7 @@
     let drag = null;
     stack.addEventListener('pointerdown', e => {
       const c = topCard(); if (!c || !c.contains(e.target)) return;
-      drag = { c, x0: e.clientX, y0: e.clientY, dx: 0, moved: false }; c.setPointerCapture(e.pointerId); c.classList.add('drag');
+      drag = { c, x0: e.clientX, y0: e.clientY, dx: 0, moved: false }; try { c.setPointerCapture(e.pointerId); } catch {} c.classList.add('drag');
     });
     stack.addEventListener('pointermove', e => {
       if (!drag) return; const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
@@ -626,9 +622,9 @@
       why.innerHTML = `<b>Why it's here.</b> ${c.dataset.why} Swipe right and more of it comes first; left and less of it does.`; why.dataset.for = c.dataset.name; why.classList.add('on');
       if (!didT) { didT = true; checks.t.classList.add('did'); }
     }
-    $('#btnMore').addEventListener('click', () => { const c = topCard(); if (c) { c.style.transform = 'translateX(60px) rotate(1.5deg)'; mood(60); setTimeout(() => commit(1), 120); } });
-    $('#btnLess').addEventListener('click', () => { const c = topCard(); if (c) { c.style.transform = 'translateX(-60px) rotate(-1.5deg)'; mood(-60); setTimeout(() => commit(-1), 120); } });
-    $('#btnReset').addEventListener('click', () => { $$('.card', stack).forEach(c => { c.classList.remove('gone', 'drag'); c.style.transform = ''; }); relayout(); why.classList.remove('on'); mood(0); });
+    $('#btnMore').addEventListener('click', () => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = 'translateX(60px) rotate(1.5deg)'; mood(60); setTimeout(() => commit(1), 120); } });
+    $('#btnLess').addEventListener('click', () => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = 'translateX(-60px) rotate(-1.5deg)'; mood(-60); setTimeout(() => commit(-1), 120); } });
+    $('#btnReset').addEventListener('click', () => { $$('.card', stack).forEach(c => { c.classList.remove('gone', 'drag', 'lift'); c.style.transform = ''; }); relayout(); why.classList.remove('on'); mood(0); });
     stack.addEventListener('keydown', e => { if (e.key === 'ArrowRight') $('#btnMore').click(); if (e.key === 'ArrowLeft') $('#btnLess').click(); });
     relayout();
 
