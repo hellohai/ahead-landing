@@ -110,13 +110,22 @@
     .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); translate: -50% 20px; z-index: 60; background: var(--ink); color: var(--paper); font-size: 13.5px; font-weight: 500; padding: 10px 16px; border-radius: 999px; box-shadow: 0 12px 30px rgba(0,0,0,.25); opacity: 0; transition: opacity 0.3s, translate 0.3s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; white-space: nowrap; }
     .toast.on { opacity: 1; translate: -50% 0; }
 
-    /* screens */
-    .screens { margin-top: clamp(48px, 7vw, 80px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-    @media (max-width: 680px) { .screens { grid-template-columns: 1fr; max-width: 300px; margin-inline: auto; } }
-    .shot { display: grid; gap: 12px; justify-items: center; }
-    .phone { width: 100%; aspect-ratio: 1320 / 2868; border-radius: 13% / 6%; padding: 3.2%; background: #100e14; box-shadow: 0 30px 60px -24px rgba(20, 10, 40, 0.55); }
-    .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 11% / 5%; }
+    /* screens: Apple's iPhone 17 Pro Max frame, turned in 3D */
+    .screens { margin-top: clamp(56px, 8vw, 96px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 20px; align-items: end; perspective: 1600px; }
+    .shot { display: grid; gap: 22px; justify-items: center; }
+    .shot .mock { width: 100%; max-width: 296px; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); filter: drop-shadow(0 36px 44px rgba(20, 10, 40, 0.30)) drop-shadow(0 6px 10px rgba(20, 10, 40, 0.10)); }
+    .shot:nth-child(1) .mock { transform: rotateY(18deg) rotateX(2deg) translateZ(-50px); }
+    .shot:nth-child(2) .mock { transform: translateY(-14px) translateZ(20px); }
+    .shot:nth-child(3) .mock { transform: rotateY(-18deg) rotateX(2deg) translateZ(-50px); }
+    .shot:hover .mock { transform: translateY(-12px) translateZ(60px); }
     .shot figcaption { font-size: 14px; color: var(--soft); text-align: center; }
+    @media (max-width: 680px) {
+      .screens { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px var(--gutter) 24px; margin-inline: calc(-1 * var(--gutter)); scrollbar-width: none; perspective: none; }
+      .screens::-webkit-scrollbar { display: none; }
+      .shot { flex: 0 0 min(70vw, 300px); scroll-snap-align: center; }
+      .shot .mock, .shot:nth-child(n) .mock { transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { .shot .mock { transition: none; } }
 
     footer { border-top: 1px solid var(--rule); padding: 32px var(--gutter) calc(40px + env(safe-area-inset-bottom, 0px)); font-size: 13.5px; color: var(--muted); }
     footer .row { max-width: var(--max); margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; justify-content: space-between; }
@@ -217,9 +226,9 @@
       </div>
 
       <div class="screens">
-        <figure class="shot"><div class="phone"><img src="assets/screens/feed.webp" alt="The morning check-in with the Coming up list and health tiles" loading="lazy" /></div><figcaption>The morning, put together.</figcaption></figure>
-        <figure class="shot"><div class="phone"><img src="assets/screens/ahead.webp" alt="A plan for Thanksgiving made from last year's to-dos" loading="lazy" /></div><figcaption>Last year's to-dos, offered back.</figcaption></figure>
-        <figure class="shot"><div class="phone"><img src="assets/screens/nudges.webp" alt="The Nudges settings page with three check-ins" loading="lazy" /></div><figcaption>Nudges at 7, 11 and 4.</figcaption></figure>
+        <figure class="shot"><img class="mock" src="assets/screens/feed-mock.webp" width="800" height="1633" alt="The morning check-in on an iPhone: the opener line, the Coming up list and the checklists" loading="lazy" /><figcaption>The morning, put together.</figcaption></figure>
+        <figure class="shot"><img class="mock" src="assets/screens/ahead-mock.webp" width="800" height="1633" alt="Thanksgiving on an iPhone: last year's to-dos offered back as reminders" loading="lazy" /><figcaption>Last year's to-dos, offered back.</figcaption></figure>
+        <figure class="shot"><img class="mock" src="assets/screens/nudges-mock.webp" width="800" height="1633" alt="The Nudges page on an iPhone: three check-ins at 7, 11 and 4" loading="lazy" /><figcaption>Nudges at 7, 11 and 4.</figcaption></figure>
       </div>
     </div>
   </section>
