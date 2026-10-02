@@ -28,7 +28,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
     body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-    img { max-width: 100%; display: block; }
+    img { max-width: 100%; height: auto; display: block; }
     a { color: inherit; }
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     :focus-visible { outline: 2px solid var(--tint); outline-offset: 3px; border-radius: 6px; }
@@ -98,12 +98,12 @@
     .plate-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 14px; padding: 0 2px; }
     .checks { display: flex; gap: 12px; font-size: 12.5px; color: var(--soft); }
     .checks span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .checks i { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--muted); display: inline-grid; place-items: center; font-style: normal; font-size: 10px; color: var(--on-tint); transition: background 0.3s, border-color 0.3s; }
-    .checks span.did i { background: var(--tint); border-color: var(--tint); }
+    .checks i { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--muted); display: inline-grid; place-items: center; font-style: normal; font-size: 10px; color: transparent; transition: background 0.3s, border-color 0.3s, color 0.3s; }
+    .checks span.did i { background: var(--tint); border-color: var(--tint); color: var(--on-tint); }
     .plate-foot .acts { display: flex; align-items: center; gap: 6px; flex: none; margin-left: auto; }
     .plate-foot .acts button { width: 32px; height: 32px; border-radius: 50%; background: var(--card); border: 1px solid var(--rule); display: grid; place-items: center; }
     .plate-foot .acts button img { width: 18px; height: 18px; }
-    .plate-foot .reset { font-size: 12.5px; color: var(--muted); padding: 0 2px; }
+    .plate-foot .reset svg { width: 16px; height: 16px; fill: none; stroke: var(--soft); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .why { width: min(100%, 420px); background: var(--card); border: 1px solid var(--rule); border-radius: 18px; padding: 14px 16px; font-size: 14.5px; color: var(--soft); display: none; }
     .why.on { display: block; }
     .why b { color: var(--ink); font-weight: 500; }
@@ -217,7 +217,7 @@
               <div class="acts">
                 <button id="btnLess" aria-label="Less of this"><img src="assets/icons/thumb-down.png" alt="" /></button>
                 <button id="btnMore" aria-label="More of this"><img src="assets/icons/thumb-up.png" alt="" /></button>
-                <button class="reset" id="btnReset">Reset</button>
+                <button class="reset" id="btnReset" aria-label="Reset" title="Reset"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5v4h4"/></svg></button>
               </div>
             </div>
           </div>
