@@ -17,13 +17,13 @@
     :root {
       color-scheme: light dark;
       --paper: #f3f1f7; --paper-2: #ebe7f3; --ink: #1e1917; --soft: #55536a; --muted: #8d8a9b;
-      --tint: #5c38a3; --on-tint: #ffffff; --card: #ffffff; --rule: rgba(28, 26, 34, 0.10); --shadow: rgba(60, 40, 100, 0.18);
+      --tint: #5c38a3; --on-tint: #ffffff; --card: #ffffff; --rule: rgba(28, 26, 34, 0.10); --shadow: rgba(60, 40, 100, 0.18); --hl: rgba(124, 84, 214, 0.16);
       --font-display: 'Outfit', ui-sans-serif, system-ui, -apple-system, sans-serif;
       --font-body: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
       --max: 1040px; --gutter: 24px;
     }
     @media (prefers-color-scheme: dark) {
-      :root { --paper: #1a171f; --paper-2: #211c2a; --ink: #f5f2ee; --soft: #bdb7c9; --muted: #8e889c; --tint: #b89ef9; --on-tint: #1a171f; --card: #28252f; --rule: rgba(241, 238, 246, 0.12); --shadow: rgba(0, 0, 0, 0.5); }
+      :root { --paper: #1a171f; --paper-2: #211c2a; --ink: #f5f2ee; --soft: #bdb7c9; --muted: #8e889c; --tint: #b89ef9; --on-tint: #1a171f; --card: #28252f; --rule: rgba(241, 238, 246, 0.12); --shadow: rgba(0, 0, 0, 0.5); --hl: rgba(184, 158, 249, 0.30); }
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
@@ -52,6 +52,8 @@
     .post h3 { font-family: var(--font-display); font-weight: 600; font-size: 23px; letter-spacing: -0.01em; margin: 36px 0 8px; line-height: 1.2; }
     .post p { font-size: 18px; line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
     .post .sig { font-weight: 500; }
+    /* one highlighted line per section: read only these and you have the argument */
+    .post mark { color: inherit; font-weight: 500; background: linear-gradient(transparent 52%, var(--hl) 52%, var(--hl) 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; }
     .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 32px; }
     .badge img { height: 48px; }
     .free { font-size: 14px; color: var(--soft); }
@@ -151,35 +153,39 @@
       </div>
 
       <p>I haven't written about Ahead in a while. Most of that time went to figuring out what it should be in a world full of agents, and the answer turned out to be smaller than I expected.</p>
-      <p>Here's what I still believe. Your calendar, your reminders and your health deserve one surface, and you should be able to shape that surface to fit your life. For free. I'm a busy parent. I care about my health at a high level, and about what I need to do today to set myself up for the days, weeks and months ahead. Apple built a good calendar. Ahead takes it and extends it the way I'd want it extended.</p>
-      <p>I'm also bearish on AI assistants, at least the kind that want to run your personal life. People want to stay in control of it. The backlash from the people inside the technology, paired with how little the people outside it understand, tells me that isn't changing soon.</p>
+      <p>Here's what I still believe. <mark>Your calendar, your reminders and your health deserve one surface, and you should be able to shape that surface to fit your life.</mark> For free. I'm a busy parent. I care about my health at a high level, and about what I need to do today to set myself up for the days, weeks and months ahead. Apple built a good calendar. Ahead takes it and extends it the way I'd want it extended.</p>
+      <p>I'm also bearish on AI assistants, at least the kind that want to run your personal life. <mark>People want to stay in control of it.</mark> The backlash from the people inside the technology, paired with how little the people outside it understand, tells me that isn't changing soon.</p>
+
+      <h3>In your hands</h3>
+      <p><mark>I think people are coming to AI because apps have gotten worse.</mark> They're overloaded with information, the important parts are buried, and the experience isn't good.</p>
+      <p>What if software acted exactly the way you wanted? What if it was only for you, and didn't reach out into unknowable black boxes to pull things back in? Your experience, the way you want it, in your hands. That's what I want Ahead to be: something that gives you <mark>more agency over your digital life</mark>.</p>
 
       <h3>Less</h3>
-      <p>There were a lot of things I thought 2.0 might end up being. "Less" wasn't one of them. A designer I worked with, Puckett, once told me that good design is figuring out what needs to be removed, or something close to that, and I think about it every day. Here is everything that led there.</p>
+      <p>There were a lot of things I thought 2.0 might end up being. "Less" wasn't one of them. A designer I worked with, Puckett, once told me that <mark>good design is figuring out what needs to be removed</mark>, or something close to that, and I think about it every day. Here is everything that led there.</p>
 
       <h3>What matters, three times a day</h3>
-      <p>The information you need at 8 in the morning is different from what you need at 8 at night, so that became the spine of the app. Ahead checks in three times a day: morning, midday and evening. Each one reads your calendar, your reminders and how you slept, and puts what matters at the top. Swipe a card right and more of that comes first. Swipe left and less of it does. It's yours to shape, which is what people keep telling me they want from their technology: more ownership, not more magic.</p>
+      <p>The information you need at 8 in the morning is different from what you need at 8 at night, so that became the spine of the app. Ahead checks in three times a day: morning, midday and evening. Each one reads your calendar, your reminders and how you slept, and puts what matters at the top. Swipe a card right and more of that comes first. Swipe left and less of it does. It's yours to shape, which is what people keep telling me they want from their technology: <mark>more ownership, not more magic</mark>.</p>
 
       <h3>I rethought what it is at its core</h3>
-      <p>I'd been adding features that made sense on their own, and in some way they did, but each one took the app further from what I needed it to be. I noticed I was using it less, and I had to be honest about why.</p>
+      <p>I'd been adding features that made sense on their own, and in some way they did, but each one took the app further from what I needed it to be. <mark>I noticed I was using it less, and I had to be honest about why.</mark></p>
 
       <h3>Apple Intelligence is good enough</h3>
-      <p>Ahead used to send your day to Claude to be written. Now Apple's on-device model writes it, on your phone. There are tradeoffs, mostly in how varied the writing is, but after a lot of testing I'm confident that what most people need, Apple can handle. And where the writing isn't the point, the app now builds the facts directly: the next thing coming up, what to wear, the nudge on your Lock Screen.</p>
+      <p>Ahead used to send your day to Claude to be written. Now Apple's on-device model writes it, on your phone. There are tradeoffs, mostly in how varied the writing is, but after a lot of testing I'm confident that <mark>what most people need, Apple can handle</mark>. And where the writing isn't the point, the app now builds the facts directly: the next thing coming up, what to wear, the nudge on your Lock Screen.</p>
 
       <h3>Faster</h3>
-      <p>The speed was the first thing that made me want to rip Claude out. Calling an external API, running it through several prompts and synthesizing the result took longer than I'd wait for an app to tell me what's next. On the phone it's seconds, and it works on a plane.</p>
+      <p>The speed was the first thing that made me want to rip Claude out. Calling an external API, running it through several prompts and synthesizing the result took longer than I'd wait for an app to tell me what's next. <mark>On the phone it's seconds, and it works on a plane.</mark></p>
 
       <h3>Less to manage, less to go wrong</h3>
-      <p>I'm one person. Every integration is a risk, and the risk compounds with each one you add. During TestFlight, a friend who isn't in tech asked me, "How do I know this app won't steal my data?" I scoffed at first. Then I realized I didn't actually know. I'm used to signing in with Google; a lot of people aren't, and they're right to ask. I'm not equipped to handle it if something goes wrong, so the honest answer was to make sure nothing can. No account. No servers. Nothing uploaded. The only thing that leaves your phone is your location, to Apple, for the weather.</p>
+      <p>I'm one person. Every integration is a risk, and the risk compounds with each one you add. During TestFlight, a friend who isn't in tech asked me, "How do I know this app won't steal my data?" I scoffed at first. Then I realized I didn't actually know. I'm used to signing in with Google; a lot of people aren't, and they're right to ask. I'm not equipped to handle it if something goes wrong, so the honest answer was to make sure nothing can. <mark>No account. No servers. Nothing uploaded.</mark> The only thing that leaves your phone is your location, to Apple, for the weather.</p>
 
       <h3>Charging for software just feels wrong</h3>
-      <p>Ahead Plus is gone. I build things for the love of the game. More money would be nice, but I'm doing fine, and I'd rather this be in as many hands as possible.</p>
+      <p><mark>Ahead Plus is gone.</mark> I build things for the love of the game. More money would be nice, but I'm doing fine, and I'd rather this be in as many hands as possible.</p>
 
       <h3>On the assistants</h3>
-      <p>Things like Muse are great conceptually. Trust will be their limit. They obfuscate the security risks too well, and the mascots are too cute.</p>
+      <p>Things like Muse are great conceptually. <mark>Trust will be their limit.</mark> They obfuscate the security risks too well, and the mascots are too cute.</p>
 
       <h3>Why</h3>
-      <p>To put my craft and taste into something I think people want. That bet, and finding out how it lands, is what keeps me going.</p>
+      <p><mark>To put my craft and taste into something I think people want.</mark> That bet, and finding out how it lands, is what keeps me going.</p>
       <p>Ahead 2.0 is free on the App Store. Download it, tell me what's wrong with it, and I'll keep removing things.</p>
       <p class="sig">James</p>
 
