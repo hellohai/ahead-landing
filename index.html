@@ -94,6 +94,8 @@
       z-index: calc(10 - var(--n)); opacity: calc(1 - var(--n) * 0.18);
     }
     .card.drag { transition: none; cursor: grabbing; }
+    .stack.pre .card, .plate.pre .plate-foot { opacity: 0; }
+    .stack.dealing .card { transition: none; }
     .card.drag, .card.lift, .card.gone { z-index: 30; }
     .card.gone { transition: transform 0.4s ease-in, opacity 0.3s; opacity: 0; pointer-events: none; }
     .card .glyph { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--paper-2); flex: none; }
@@ -221,7 +223,7 @@
         </div>
         <div class="deck">
           <div class="plate" id="plate">
-            <div class="plate-head"><span>Coming up</span><span class="count">4</span></div>
+            <div class="plate-head"><span>Coming up</span><span class="count" id="count">4</span></div>
             <div class="thumbs" id="thumbs" aria-hidden="true"><img src="assets/icons/thumb-up.png" alt="" id="tUp" /><img src="assets/icons/thumb-down.png" alt="" id="tDown" /></div>
             <div class="stack" id="stack">
               <div class="card" style="--n:0" data-why="You said <b>Sarah</b> matters. Anything with her in it comes first." data-name="Sarah"><div class="glyph initial">S</div><div class="text"><div class="ttl">Q2 report review with Sarah</div><div class="when"><b>Tomorrow</b> 2:30 PM · <em>Sarah</em></div></div></div>
@@ -277,7 +279,8 @@
 
     // ── Coming up: the deck from the app ──
     const stack = $('#stack'), plate = $('#plate'), thumbs = $('#thumbs'), tUp = $('#tUp'), tDown = $('#tDown'), why = $('#why');
-    const COMMIT = 92; let didR = false, didL = false, didT = false;
+    const COMMIT = 92; let didR = false, didL = false, didT = false, dealing = false;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, count = $('#count'), foot = $('.plate-foot', plate);
     const checks = { r: $('#cRight'), l: $('#cLeft'), t: $('#cTap') };
     function relayout() { $$('.card:not(.gone)', stack).forEach((c, i) => c.style.setProperty('--n', Math.min(i, 3))); }
     function topCard() { return $('.card:not(.gone)', stack); }
@@ -299,7 +302,7 @@
     }
     let drag = null;
     stack.addEventListener('pointerdown', e => {
-      const c = topCard(); if (!c || !c.contains(e.target)) return;
+      const c = topCard(); if (dealing || !c || !c.contains(e.target)) return;
       drag = { c, x0: e.clientX, y0: e.clientY, dx: 0, moved: false }; try { c.setPointerCapture(e.pointerId); } catch {} c.classList.add('drag');
     });
     stack.addEventListener('pointermove', e => {
@@ -319,11 +322,38 @@
       why.innerHTML = `<b>Why it's here.</b> ${c.dataset.why} Swipe right and more of it comes first; left and less of it does.`; why.dataset.for = c.dataset.name; why.classList.add('on');
       if (!didT) { didT = true; checks.t.classList.add('did'); }
     }
-    $('#btnMore').addEventListener('click', () => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = 'translateX(60px) rotate(1.5deg)'; mood(60); setTimeout(() => commit(1), 120); } });
-    $('#btnLess').addEventListener('click', () => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = 'translateX(-60px) rotate(-1.5deg)'; mood(-60); setTimeout(() => commit(-1), 120); } });
-    $('#btnReset').addEventListener('click', () => { $$('.card', stack).forEach(c => { c.classList.remove('gone', 'drag', 'lift'); c.style.transform = ''; }); relayout(); why.classList.remove('on'); mood(0); });
+    $('#btnMore').addEventListener('click', () => { const c = topCard(); if (c && !dealing) { c.classList.add('lift'); c.style.transform = 'translateX(60px) rotate(1.5deg)'; mood(60); setTimeout(() => commit(1), 120); } });
+    $('#btnLess').addEventListener('click', () => { const c = topCard(); if (c && !dealing) { c.classList.add('lift'); c.style.transform = 'translateX(-60px) rotate(-1.5deg)'; mood(-60); setTimeout(() => commit(-1), 120); } });
+    $('#btnReset').addEventListener('click', () => { if (dealing) return; $$('.card', stack).forEach(c => { c.classList.remove('gone', 'drag', 'lift'); c.style.transform = ''; }); relayout(); why.classList.remove('on'); mood(0); deal(); });
     stack.addEventListener('keydown', e => { if (e.key === 'ArrowRight') $('#btnMore').click(); if (e.key === 'ArrowLeft') $('#btnLess').click(); });
     relayout();
+
+    // The deal: when the deck comes into view, the cards drop onto the pile one at a time,
+    // bottom card first, each with a little tilt, and the count ticks up as they land.
+    function deal() {
+      const cards = $$('.card', stack).reverse();          // Mia's recital first, Sarah last, on top
+      if (reduce || !cards.length || !stack.animate) { stack.classList.remove('pre'); plate.classList.remove('pre'); return; }
+      dealing = true; stack.classList.add('dealing'); count.style.visibility = 'hidden';
+      const GAP = 150, RUN = 620;
+      cards.forEach((c, i) => {
+        const n = Math.min(cards.length - 1 - i, 3), tilt = (i % 2 ? 1 : -1) * (4 - i * 0.6);
+        c.animate([
+          { transform: `translateY(-46px) rotate(${tilt}deg) scale(1.04)`, opacity: 0 },
+          { opacity: 1, offset: 0.3 },
+          { transform: `translateY(${n * 8}px) scale(${1 - n * 0.035})`, opacity: 1 - n * 0.18 },
+        ], { duration: RUN, delay: i * GAP, easing: 'cubic-bezier(0.3, 1.35, 0.55, 1)', fill: 'backwards' });
+        setTimeout(() => { count.textContent = i + 1; count.style.visibility = ''; }, i * GAP + RUN * 0.42);
+      });
+      stack.classList.remove('pre');
+      const end = (cards.length - 1) * GAP + RUN;
+      foot.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 400, delay: end - 150, easing: 'ease-out', fill: 'backwards' });
+      plate.classList.remove('pre');
+      setTimeout(() => { dealing = false; stack.classList.remove('dealing'); }, end);
+    }
+    if (!reduce && 'IntersectionObserver' in window && stack.animate) {
+      stack.classList.add('pre'); plate.classList.add('pre');
+      new IntersectionObserver((entries, obs) => { if (entries.some(e => e.isIntersecting)) { obs.disconnect(); deal(); } }, { threshold: 0.6 }).observe(plate);
+    }
 
     // ── the post: tap a highlighted line if it rings true ──
     const marks = $$('.post mark[data-line]');
