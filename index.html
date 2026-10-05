@@ -107,21 +107,15 @@
     .thumbs { position: absolute; left: 16px; right: 16px; top: 52px; height: 78px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 15; opacity: 0; pointer-events: none; background: var(--mood, transparent); transition: background 0.2s, opacity 0.15s; }
     .plate.live .thumbs { opacity: 1; }
     .thumbs img { width: 32px; height: 32px; opacity: var(--o, 0); scale: calc(0.6 + 0.4 * var(--o, 0)); transition: opacity 0.15s, scale 0.15s; }
-    .plate-foot { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 0 2px; }
-    .deck-hint { font-size: 12.5px; color: var(--soft); }
+    .plate-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 14px; padding: 0 2px; }
+    .checks { display: flex; gap: 12px; font-size: 12.5px; color: var(--soft); }
+    .checks span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .checks i { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--muted); display: inline-grid; place-items: center; font-style: normal; font-size: 10px; color: transparent; transition: background 0.3s, border-color 0.3s, color 0.3s; }
+    .checks span.did i { background: var(--tint); border-color: var(--tint); color: var(--on-tint); }
     .plate-foot .acts { display: flex; align-items: center; gap: 6px; flex: none; margin-left: auto; }
     .plate-foot .acts button { width: 32px; height: 32px; border-radius: 50%; background: var(--card); border: 1px solid var(--rule); display: grid; place-items: center; }
     .plate-foot .acts button img { width: 18px; height: 18px; }
-    .plate-foot .acts button svg { width: 16px; height: 16px; fill: none; stroke: var(--soft); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-    .results { display: grid; gap: 14px; padding: 2px 2px 0; }
-    .r-row { display: grid; gap: 6px; }
-    .r-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .r-ttl { font-size: 14.5px; font-weight: 500; min-width: 0; }
-    .r-mine { width: 18px; height: 18px; flex: none; }
-    .r-bar { height: 6px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 9%, transparent); overflow: hidden; }
-    .r-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tint); transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
-    .r-sub { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-    .r-note { font-size: 12.5px; color: var(--muted); }
+    .plate-foot .reset svg { width: 16px; height: 16px; fill: none; stroke: var(--soft); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .why { width: min(100%, 420px); background: var(--card); border: 1px solid var(--rule); border-radius: 18px; padding: 14px 16px; font-size: 14.5px; color: var(--soft); display: none; }
     .why.on { display: block; }
     .why b { color: var(--ink); font-weight: 500; }
@@ -227,23 +221,20 @@
         </div>
         <div class="deck">
           <div class="plate" id="plate">
-            <div class="plate-head"><span id="plateTitle">Help decide what's next</span><span class="count" id="left">6</span></div>
+            <div class="plate-head"><span>Coming up</span><span class="count">4</span></div>
             <div class="thumbs" id="thumbs" aria-hidden="true"><img src="assets/icons/thumb-up.png" alt="" id="tUp" /><img src="assets/icons/thumb-down.png" alt="" id="tDown" /></div>
-            <div class="stack" id="stack" tabindex="0" aria-label="Ideas. Arrow right if you want it, arrow left if not.">
-              <div class="card" style="--n:0" data-id="live" data-why="A Live Activity that counts down to your next event and clears itself once it starts."><div class="glyph"><img src="assets/icons/bell.png" alt="" /></div><div class="text"><div class="ttl">Next up, on your Lock Screen</div><div class="when">A live countdown to the next thing</div></div></div>
-              <div class="card" style="--n:1" data-id="mail" data-why="Ahead would pick out the few emails that need you and leave the rest, reading your mail on the phone like everything else."><div class="glyph"><img src="assets/icons/mail.png" alt="" /></div><div class="text"><div class="ttl">Email that needs a reply</div><div class="when">Read on your iPhone, never uploaded</div></div></div>
-              <div class="card" style="--n:2" data-id="two" data-why="Drop midday. Morning sets up the day, evening sets up tomorrow."><div class="glyph"><img src="assets/icons/moon.png" alt="" /></div><div class="text"><div class="ttl">Two check-ins, not three</div><div class="when">Morning and evening only</div></div></div>
-              <div class="card" style="--n:3" data-id="watch" data-why="Each check-in's sentence and the next thing coming up, as a complication and a tap on the wrist."><div class="glyph"><img src="assets/icons/clock.png" alt="" /></div><div class="text"><div class="ttl">Check-ins on Apple Watch</div><div class="when">On your wrist at 7, 11 and 4</div></div></div>
-              <div class="card" style="--n:3" data-id="noweather" data-why="Weather is the one thing that leaves your phone: your approximate location, sent to Apple. Without it, nothing would."><div class="glyph"><img src="assets/icons/umbrella.png" alt="" /></div><div class="text"><div class="ttl">Drop the weather</div><div class="when">Then nothing leaves your iPhone</div></div></div>
-              <div class="card" style="--n:3" data-id="mac" data-why="The iPhone app on Apple silicon Macs, with the same three check-ins."><div class="glyph"><img src="assets/icons/computer.png" alt="" /></div><div class="text"><div class="ttl">Ahead on Mac</div><div class="when">The same check-ins, on your desk</div></div></div>
+            <div class="stack" id="stack">
+              <div class="card" style="--n:0" data-why="You said <b>Sarah</b> matters. Anything with her in it comes first." data-name="Sarah"><div class="glyph initial">S</div><div class="text"><div class="ttl">Q2 report review with Sarah</div><div class="when"><b>Tomorrow</b> 2:30 PM · <em>Sarah</em></div></div></div>
+              <div class="card" style="--n:1" data-why="A rule you turned on: <b>bills before they're due</b>. Due dates move up a day." data-name="bills"><div class="glyph"><img src="assets/icons/card.png" alt="" /></div><div class="text"><div class="ttl">Pay Visa bill</div><div class="when"><b>Tomorrow</b> 5:00 PM · <em>Bills before they're due</em></div></div></div>
+              <div class="card" style="--n:2" data-why="A rule you turned on: <b>doctor and dentist early</b>. Appointments get a week's notice." data-name="appointments"><div class="glyph"><img src="assets/icons/heart.png" alt="" /></div><div class="text"><div class="ttl">Dentist — cleaning</div><div class="when"><b>Saturday</b> 9:00 AM · <em>Doctor and dentist early</em></div></div></div>
+              <div class="card" style="--n:3" data-why="You said <b>Mia</b> matters. Anything with her in it comes first." data-name="Mia"><div class="glyph"><img src="assets/icons/music.png" alt="" /></div><div class="text"><div class="ttl">Mia's recital</div><div class="when"><b>Friday</b> 6:00 PM · <em>Mia</em></div></div></div>
             </div>
-            <div class="results" id="results" hidden></div>
             <div class="plate-foot">
-              <span class="deck-hint" id="deckHint">Right if you want it, left if not</span>
+              <div class="checks"><span id="cRight"><i>✓</i>Swipe right</span><span id="cLeft"><i>✓</i>Swipe left</span><span id="cTap"><i>✓</i>Tap it</span></div>
               <div class="acts">
-                <button id="btnLess" aria-label="Not this"><img src="assets/icons/thumb-down.png" alt="" /></button>
-                <button id="btnMore" aria-label="Want this"><img src="assets/icons/thumb-up.png" alt="" /></button>
-                <button id="btnView" aria-label="See results" title="See results"></button>
+                <button id="btnLess" aria-label="Less of this"><img src="assets/icons/thumb-down.png" alt="" /></button>
+                <button id="btnMore" aria-label="More of this"><img src="assets/icons/thumb-up.png" alt="" /></button>
+                <button class="reset" id="btnReset" aria-label="Reset" title="Reset"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5v4h4"/></svg></button>
               </div>
             </div>
           </div>
@@ -278,66 +269,33 @@
         return r.ok ? await r.json() : null;
       } catch { return null; }
     }
-    let tally = null; // { votes: { id: { up, down } }, lines: { id: n } }
-    const myVotes = keep.get('ahead.votes', {}), myLines = keep.get('ahead.lines', {});
+    let tally = null; // { lines: { id: n } }
+    const myLines = keep.get('ahead.lines', {});
 
     let toastT; const toast = $('#toast');
     function say(text) { toast.textContent = text; toast.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('on'), 2800); }
 
-    // ── the ballot: swipe right if you want it, left if not ──
+    // ── Coming up: the deck from the app ──
     const stack = $('#stack'), plate = $('#plate'), thumbs = $('#thumbs'), tUp = $('#tUp'), tDown = $('#tDown'), why = $('#why');
-    const results = $('#results'), left = $('#left'), btnView = $('#btnView'), hint = $('#deckHint'), title = $('#plateTitle');
-    const ICON_CHART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg>';
-    const ICON_DECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="16" height="10" rx="2.5"/><path d="M7 5.5h10"/></svg>';
-    const ideas = $$('.card', stack).map(c => ({ id: c.dataset.id, title: $('.ttl', c).textContent }));
-    $$('.card', stack).forEach(c => { if (myVotes[c.dataset.id]) c.remove(); });
-    const COMMIT = 92;
-    const topCard = () => $('.card:not(.gone)', stack);
-    const remaining = () => $$('.card:not(.gone)', stack).length;
-    function relayout() { $$('.card:not(.gone)', stack).forEach((c, i) => c.style.setProperty('--n', Math.min(i, 3))); left.textContent = remaining(); }
+    const COMMIT = 92; let didR = false, didL = false, didT = false;
+    const checks = { r: $('#cRight'), l: $('#cLeft'), t: $('#cTap') };
+    function relayout() { $$('.card:not(.gone)', stack).forEach((c, i) => c.style.setProperty('--n', Math.min(i, 3))); }
+    function topCard() { return $('.card:not(.gone)', stack); }
     function mood(dx) {
       const up = Math.min(1, Math.max(0, (dx - 20) / 70)), down = Math.min(1, Math.max(0, (-dx - 20) / 70));
       thumbs.style.setProperty('--mood', Math.abs(dx) > 4 ? (dx > 0 ? 'rgba(46,140,87,0.95)' : 'rgba(181,74,61,0.95)') : 'transparent');
       plate.classList.toggle('live', Math.abs(dx) > 4);
       tUp.style.setProperty('--o', up); tDown.style.setProperty('--o', down);
     }
-    function renderResults() {
-      results.innerHTML = ideas.map(i => {
-        const t = tally && tally.votes[i.id], up = t ? t.up : 0, n = t ? t.up + t.down : 0, pct = n ? Math.round(100 * up / n) : 0, mine = myVotes[i.id];
-        const me = mine ? `<img class="r-mine" src="assets/icons/thumb-${mine}.png" alt="${mine === 'up' ? 'You want this' : 'Not for you'}" />` : '';
-        const nums = tally ? `<div class="r-bar"><i style="width:${pct}%"></i></div><div class="r-sub">${n ? `${pct}% want it · ${n} vote${n === 1 ? '' : 's'}` : 'No votes yet'}</div>` : '';
-        return `<div class="r-row"><div class="r-top"><span class="r-ttl">${esc(i.title)}</span>${me}</div>${nums}</div>`;
-      }).join('') + (tally ? '' : '<p class="r-note">Totals show up here as votes come in.</p>');
-    }
-    let view = 'deck';
-    function setView(v) {
-      view = v; const showing = v === 'results';
-      stack.hidden = showing; results.hidden = !showing; $('#btnLess').hidden = $('#btnMore').hidden = showing;
-      btnView.hidden = showing && remaining() === 0;
-      btnView.innerHTML = showing ? ICON_DECK : ICON_CHART;
-      btnView.setAttribute('aria-label', showing ? 'Back to voting' : 'See results'); btnView.title = btnView.getAttribute('aria-label');
-      title.textContent = showing ? 'What people want' : 'Help decide what\u2019s next';
-      left.hidden = showing;
-      hint.textContent = showing ? (tally ? 'Totals so far' : 'Your picks') : 'Right if you want it, left if not';
-      why.classList.remove('on');
-      if (showing) renderResults();
-    }
-    btnView.addEventListener('click', () => setView(view === 'results' ? 'deck' : 'results'));
-    async function commit(dir) {
+    function commit(dir) {
       const c = topCard(); if (!c) return;
       c.classList.remove('drag', 'lift'); c.classList.add('gone'); c.style.transform = `translateX(${dir * 130}%) rotate(${dir * 8}deg)`;
       mood(0); why.classList.remove('on');
-      const id = c.dataset.id, choice = dir > 0 ? 'up' : 'down';
-      myVotes[id] = choice; keep.set('ahead.votes', myVotes);
+      const name = c.dataset.name;
+      if (dir > 0) { say(`More of this: ${name[0].toUpperCase() + name.slice(1)}`); if (!didR) { didR = true; checks.r.classList.add('did'); } }
+      else { say('Less of this, for two weeks'); if (!didL) { didL = true; checks.l.classList.add('did'); } }
       setTimeout(relayout, 120);
-      const last = !topCard();
-      const res = await pulse({ kind: 'vote', id, dir: choice });
-      if (res && typeof res.up === 'number') {
-        tally = tally || { votes: {}, lines: {} }; tally.votes[id] = { up: res.up, down: res.down };
-        const n = res.up + res.down, same = choice === 'up' ? res.up : res.down;
-        say(n > 1 ? `${Math.round(100 * same / n)}% of ${n} people agree with you` : 'You\u2019re the first to vote on this');
-      } else say(choice === 'up' ? 'Thanks: you want this' : 'Thanks: not for you');
-      if (last) setTimeout(() => setView('results'), 600);
+      if (!topCard()) setTimeout(() => say('That’s the idea. Reset to try again.'), 900);
     }
     let drag = null;
     stack.addEventListener('pointerdown', e => {
@@ -356,15 +314,16 @@
     }
     stack.addEventListener('pointerup', e => endDrag(e, false)); stack.addEventListener('pointercancel', e => endDrag(e, true));
     function tapCard(c) {
-      const open = why.classList.contains('on') && why.dataset.for === c.dataset.id;
+      const open = why.classList.contains('on') && why.dataset.for === c.dataset.name;
       if (open) { why.classList.remove('on'); return; }
-      why.textContent = c.dataset.why; why.dataset.for = c.dataset.id; why.classList.add('on');
+      why.innerHTML = `<b>Why it's here.</b> ${c.dataset.why} Swipe right and more of it comes first; left and less of it does.`; why.dataset.for = c.dataset.name; why.classList.add('on');
+      if (!didT) { didT = true; checks.t.classList.add('did'); }
     }
-    const nudge = dir => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = `translateX(${dir * 60}px) rotate(${dir * 1.5}deg)`; mood(dir * 60); setTimeout(() => commit(dir), 120); } };
-    $('#btnMore').addEventListener('click', () => nudge(1));
-    $('#btnLess').addEventListener('click', () => nudge(-1));
-    stack.addEventListener('keydown', e => { if (e.key === 'ArrowRight') nudge(1); if (e.key === 'ArrowLeft') nudge(-1); });
-    relayout(); setView(topCard() ? 'deck' : 'results');
+    $('#btnMore').addEventListener('click', () => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = 'translateX(60px) rotate(1.5deg)'; mood(60); setTimeout(() => commit(1), 120); } });
+    $('#btnLess').addEventListener('click', () => { const c = topCard(); if (c) { c.classList.add('lift'); c.style.transform = 'translateX(-60px) rotate(-1.5deg)'; mood(-60); setTimeout(() => commit(-1), 120); } });
+    $('#btnReset').addEventListener('click', () => { $$('.card', stack).forEach(c => { c.classList.remove('gone', 'drag', 'lift'); c.style.transform = ''; }); relayout(); why.classList.remove('on'); mood(0); });
+    stack.addEventListener('keydown', e => { if (e.key === 'ArrowRight') $('#btnMore').click(); if (e.key === 'ArrowLeft') $('#btnLess').click(); });
+    relayout();
 
     // ── the post: tap a highlighted line if it rings true ──
     const marks = $$('.post mark[data-line]');
@@ -384,7 +343,7 @@
       if (tally) tally.lines[id] = Math.max(0, (tally.lines[id] || 0) + (on ? 1 : -1));
       paintLines();
       const res = await pulse({ kind: 'agree', id, on });
-      if (res && typeof res.n === 'number') { tally = tally || { votes: {}, lines: {} }; tally.lines[id] = res.n; paintLines(); }
+      if (res && typeof res.n === 'number') { tally = tally || { lines: {} }; tally.lines[id] = res.n; paintLines(); }
     }
     marks.forEach(m => {
       m.addEventListener('click', () => { const sel = getSelection(); if (sel && !sel.isCollapsed) return; toggleLine(m); });
@@ -392,7 +351,7 @@
     });
     paintLines();
 
-    pulse().then(t => { if (t && t.votes && t.lines) { tally = t; paintLines(); if (view === 'results') setView('results'); } });
+    pulse().then(t => { if (t && t.lines) { tally = t; paintLines(); } });
   </script>
 </body>
 </html>

@@ -1,7 +1,6 @@
-// Anonymous counts for aheadof.app: votes on what's next, and agrees on the post's highlighted lines.
+// Anonymous counts for aheadof.app: agrees on the post's highlighted lines.
 //
-// GET  /api/pulse                          -> { votes: { id: { up, down } }, lines: { id: n } }
-// POST /api/pulse { kind: "vote",  id, dir: "up" | "down" } -> { id, up, down }
+// GET  /api/pulse                          -> { lines: { id: n } }
 // POST /api/pulse { kind: "agree", id, on: true | false }   -> { id, n }
 //
 // Storage is Upstash Redis over its REST API (connect it in Vercel → Storage; it sets
@@ -9,8 +8,7 @@
 // hashed with the hour into a key that expires after an hour; the IP itself is never stored.
 const crypto = require('crypto');
 
-// Keep in step with the cards and the <mark data-line> ids in index.html.
-const IDEAS = ['live', 'mail', 'two', 'watch', 'noweather', 'mac'];
+// Keep in step with the <mark data-line> ids in index.html.
 const LINES = ['surface', 'control', 'worse', 'agency', 'remove', 'ownership', 'honest', 'apple', 'seconds', 'nothing', 'plus', 'trust', 'craft'];
 const WRITES_PER_HOUR = 60;
 
@@ -30,9 +28,8 @@ async function redis(commands) {
 
 const pairs = arr => { const o = {}; for (let i = 0; arr && i < arr.length; i += 2) o[arr[i]] = Math.max(0, parseInt(arr[i + 1], 10) || 0); return o; };
 
-function shape(votes, lines) {
-  const out = { votes: {}, lines: {} };
-  for (const id of IDEAS) out.votes[id] = { up: votes[`${id}:up`] || 0, down: votes[`${id}:down`] || 0 };
+function shape(lines) {
+  const out = { lines: {} };
   for (const id of LINES) out.lines[id] = lines[id] || 0;
   return out;
 }
@@ -56,8 +53,8 @@ module.exports = async (req, res) => {
   if (!STORE_URL || !STORE_TOKEN) return send(res, 503, { error: 'counts are not connected yet' });
   try {
     if (req.method === 'GET') {
-      const [votes, lines] = await redis([['HGETALL', 'pulse:votes'], ['HGETALL', 'pulse:lines']]);
-      return send(res, 200, shape(pairs(votes), pairs(lines)), 'public, s-maxage=15, stale-while-revalidate=60');
+      const [lines] = await redis([['HGETALL', 'pulse:lines']]);
+      return send(res, 200, shape(pairs(lines)), 'public, s-maxage=15, stale-while-revalidate=60');
     }
     if (req.method !== 'POST') return send(res, 405, { error: 'method' });
 
@@ -71,10 +68,6 @@ module.exports = async (req, res) => {
     if (writes > WRITES_PER_HOUR) return send(res, 429, { error: 'slow down' });
 
     const b = await readBody(req);
-    if (b.kind === 'vote' && IDEAS.includes(b.id) && (b.dir === 'up' || b.dir === 'down')) {
-      const [, counts] = await redis([['HINCRBY', 'pulse:votes', `${b.id}:${b.dir}`, '1'], ['HMGET', 'pulse:votes', `${b.id}:up`, `${b.id}:down`]]);
-      return send(res, 200, { id: b.id, up: parseInt(counts[0], 10) || 0, down: parseInt(counts[1], 10) || 0 });
-    }
     if (b.kind === 'agree' && LINES.includes(b.id) && typeof b.on === 'boolean') {
       let [n] = await redis([['HINCRBY', 'pulse:lines', b.id, b.on ? '1' : '-1']]);
       if (n < 0) { await redis([['HSET', 'pulse:lines', b.id, '0']]); n = 0; }
