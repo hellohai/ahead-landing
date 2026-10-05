@@ -134,13 +134,33 @@
     }
     @media (prefers-reduced-motion: reduce) { .shot .mock { transition: none; } }
 
+    /* First visit: the icon's three marks light up one at a time, morning, midday, evening,
+       then the icon settles into its place above the title as the page rises in. */
+    .introlay { display: none; }
+    html.intro .introlay { display: block; position: fixed; inset: 0; z-index: 100; animation: intro-safety 0.4s ease 4.5s forwards; }
+    .introlay .bg { position: absolute; inset: 0; background: var(--paper); }
+    .intro-icon { position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 22%; overflow: hidden; box-shadow: 0 10px 30px -12px var(--shadow); opacity: 0; }
+    .intro-icon picture { position: absolute; display: block; }
+    .intro-icon img { display: block; width: 100%; height: 100%; max-width: none; }
+    .intro-icon .tile { inset: 0; }
+    .intro-icon .mk { top: 31.25%; width: 33.398%; height: 33.398%; opacity: 0; }
+    .intro-icon .m1 { left: 12.305%; } .intro-icon .m2 { left: 33.203%; } .intro-icon .m3 { left: 54.297%; }
+    html.intro .mast-icon { visibility: hidden; }
+    @keyframes intro-safety { to { opacity: 0; visibility: hidden; } }
+
     footer { border-top: 1px solid var(--rule); padding: 32px var(--gutter) calc(40px + env(safe-area-inset-bottom, 0px)); font-size: 13.5px; color: var(--muted); }
     footer .row { max-width: var(--max); margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; justify-content: space-between; }
     footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
     footer a:hover { color: var(--tint); }
   </style>
+  <script>try { if (!localStorage.getItem('ahead.intro') && !location.hash && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('intro'); } catch (e) {}</script>
 </head>
 <body>
+
+  <div class="introlay" id="intro" aria-hidden="true">
+    <div class="bg"></div>
+    <div class="intro-icon" id="introIcon"><picture class="tile"><source media="(prefers-color-scheme: dark)" srcset="assets/intro/tile-dark.png" /><img src="assets/intro/tile-light.png" alt="" loading="lazy" /></picture><picture class="mk m1"><source media="(prefers-color-scheme: dark)" srcset="assets/intro/mark1-dark.png" /><img src="assets/intro/mark1-light.png" alt="" loading="lazy" /></picture><picture class="mk m2"><source media="(prefers-color-scheme: dark)" srcset="assets/intro/mark2-dark.png" /><img src="assets/intro/mark2-light.png" alt="" loading="lazy" /></picture><picture class="mk m3"><source media="(prefers-color-scheme: dark)" srcset="assets/intro/mark3-dark.png" /><img src="assets/intro/mark3-light.png" alt="" loading="lazy" /></picture></div>
+  </div>
 
   <header class="bar">
     <div class="row">
@@ -152,7 +172,7 @@
   <article class="post" id="post">
     <div class="wrap inner">
       <div class="mast">
-        <picture><source srcset="assets/icon-dark.png" media="(prefers-color-scheme: dark)" /><img src="assets/icon.png" alt="" width="72" height="72" /></picture>
+        <picture class="mast-icon"><source srcset="assets/icon-dark.png" media="(prefers-color-scheme: dark)" /><img src="assets/icon.png" alt="" width="72" height="72" /></picture>
         <h1>(Re)introducing Ahead for iOS</h1>
         <p class="date">October 2026</p>
       </div>
@@ -249,6 +269,43 @@
 
   <script>
     const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
+    // ── First visit: three marks, then the icon settles above the title ──
+    (function intro() {
+      const root = document.documentElement; if (!root.classList.contains('intro')) return;
+      try { localStorage.setItem('ahead.intro', '1'); } catch {}
+      const lay = $('#intro'), bg = $('.bg', lay), icon = $('#introIcon'), marks = $$('.mk', icon), target = $('.mast-icon img');
+      const imgs = $$('img', icon), stage = [], page = [], SKIP = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+      let done = false;
+      function end(skipped) {
+        if (done) return; done = true;
+        stage.concat(skipped ? page : []).forEach(a => { try { a.finish(); } catch {} });
+        root.classList.remove('intro');
+        SKIP.forEach(ev => removeEventListener(ev, skip, true));
+      }
+      const skip = () => end(true);
+      SKIP.forEach(ev => addEventListener(ev, skip, { capture: true, passive: true }));
+      const loaded = Promise.all(imgs.map(i => i.complete && i.naturalWidth ? null : new Promise(r => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); })));
+      Promise.race([loaded, new Promise(r => setTimeout(r, 1500))]).then(() => {
+        if (done) return;
+        if (!icon.animate || scrollY > 40 || !imgs.every(i => i.naturalWidth)) return end(true);
+        const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+        stage.push(icon.animate([{ opacity: 0, transform: 'scale(0.86)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 500, easing: EASE, fill: 'both' }));
+        marks.forEach((m, i) => stage.push(m.animate([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 420, delay: 360 + i * 200, easing: 'cubic-bezier(0.3, 1.45, 0.5, 1)', fill: 'both' })));
+        const T = 360 + 2 * 200 + 420 + 240;    // a beat after the evening mark lands
+        setTimeout(() => {
+          if (done) return;
+          const a = icon.getBoundingClientRect(), b = target.getBoundingClientRect();
+          const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2), k = b.width / icon.offsetWidth;
+          stage.push(icon.animate([{ transform: 'none' }, { transform: `translate(${dx}px, ${dy}px) scale(${k})` }], { duration: 720, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' }));
+          stage.push(bg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 560, delay: 120, easing: 'ease-out', fill: 'forwards' }));
+          // the bar, the title, the date, then everything below them together
+          $$('.bar, .post .mast h1, .post .mast .date, .post .inner > :not(.mast), .does, footer').forEach((el, i) =>
+            page.push(el.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 640, delay: 180 + Math.min(i, 3) * 70, easing: EASE, fill: 'backwards' })));
+          setTimeout(() => end(false), 740);
+        }, T);
+      });
+    })();
+
     let toastT; const toast = $('#toast');
     function say(text) { toast.textContent = text; toast.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('on'), 2800); }
 
