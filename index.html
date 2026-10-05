@@ -53,6 +53,8 @@
     .post h3 { font-family: var(--font-display); font-weight: 600; font-size: 23px; letter-spacing: -0.01em; margin: 36px 0 8px; line-height: 1.2; }
     .post p { font-size: 18px; line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
     .post .sig { font-weight: 500; }
+    .post p a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent); transition: color 0.2s, text-decoration-color 0.2s; }
+    .post p a:hover { color: var(--tint); text-decoration-color: var(--tint); }
     /* one highlighted line per section: read only these and you have the argument */
     .post mark { color: inherit; font-weight: 500; background: linear-gradient(transparent 52%, var(--hl) 52%, var(--hl) 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; }
     .cta { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 48px; text-align: center; }
@@ -159,12 +161,12 @@
       <p>Here's what I still believe. <mark>Your calendar, your reminders and your health deserve one surface, and you should be able to shape that surface to fit your life.</mark> For free. I'm a busy parent. I care about my health at a high level, and about what I need to do today to set myself up for the days, weeks and months ahead. Apple built a good calendar. Ahead takes it and extends it the way I'd want it extended.</p>
       <p>I'm also bearish on AI assistants, at least the kind that want to run your personal life. <mark>People want to stay in control of it.</mark> The backlash from the people inside the technology, paired with how little the people outside it understand, tells me that isn't changing soon.</p>
 
+      <h3>Less</h3>
+      <p>There were a lot of things I thought 2.0 might end up being. "Less" wasn't one of them. A designer I worked with, <a href="https://joshpuckett.me" target="_blank" rel="noopener">Josh Puckett</a>, once told me that <mark>good design is figuring out what needs to be removed</mark>, or something close to that, and I think about it every day. Here is everything that led there.</p>
+
       <h3>In your hands</h3>
       <p><mark>I think people are coming to AI because apps have gotten worse.</mark> They're overloaded with information, the important parts are buried, and the experience isn't good.</p>
       <p>What if software acted exactly the way you wanted? What if it was only for you, and didn't reach out into unknowable black boxes to pull things back in? Your experience, the way you want it, in your hands. That's what I want Ahead to be: something that gives you <mark>more agency over your digital life</mark>.</p>
-
-      <h3>Less</h3>
-      <p>There were a lot of things I thought 2.0 might end up being. "Less" wasn't one of them. A designer I worked with, Puckett, once told me that <mark>good design is figuring out what needs to be removed</mark>, or something close to that, and I think about it every day. Here is everything that led there.</p>
 
       <h3>What matters, three times a day</h3>
       <p>The information you need at 8 in the morning is different from what you need at 8 at night, so that became the spine of the app. Ahead checks in three times a day: morning, midday and evening. Each one reads your calendar, your reminders and how you slept, and puts what matters at the top. Swipe a card right and more of that comes first. Swipe left and less of it does. It's yours to shape, which is what people keep telling me they want from their technology: <mark>more ownership, not more magic</mark>.</p>
