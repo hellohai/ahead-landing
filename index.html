@@ -17,17 +17,16 @@
     :root {
       color-scheme: light dark;
       --paper: #f3f1f7; --paper-2: #ebe7f3; --ink: #1e1917; --soft: #55536a; --muted: #8d8a9b;
-      --tint: #5c38a3; --on-tint: #ffffff; --card: #ffffff; --rule: rgba(28, 26, 34, 0.10); --shadow: rgba(60, 40, 100, 0.18); --hl-rgb: 124, 84, 214; --hl-a0: 0.16; --hl-a1: 0.44;
+      --tint: #5c38a3; --on-tint: #ffffff; --card: #ffffff; --rule: rgba(28, 26, 34, 0.10); --shadow: rgba(60, 40, 100, 0.18); --hl: rgba(124, 84, 214, 0.16);
       --font-display: 'Outfit', ui-sans-serif, system-ui, -apple-system, sans-serif;
       --font-body: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
       --max: 1040px; --gutter: 24px;
     }
     @media (prefers-color-scheme: dark) {
-      :root { --paper: #1a171f; --paper-2: #211c2a; --ink: #f5f2ee; --soft: #bdb7c9; --muted: #8e889c; --tint: #b89ef9; --on-tint: #1a171f; --card: #28252f; --rule: rgba(241, 238, 246, 0.12); --shadow: rgba(0, 0, 0, 0.5); --hl-rgb: 184, 158, 249; --hl-a0: 0.28; --hl-a1: 0.58; }
+      :root { --paper: #1a171f; --paper-2: #211c2a; --ink: #f5f2ee; --soft: #bdb7c9; --muted: #8e889c; --tint: #b89ef9; --on-tint: #1a171f; --card: #28252f; --rule: rgba(241, 238, 246, 0.12); --shadow: rgba(0, 0, 0, 0.5); --hl: rgba(184, 158, 249, 0.30); }
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     [hidden] { display: none !important; }
-    @property --w { syntax: '<number>'; inherits: false; initial-value: 0; }
     html { -webkit-text-size-adjust: 100%; }
     body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     img { max-width: 100%; height: auto; display: block; }
@@ -54,16 +53,8 @@
     .post h3 { font-family: var(--font-display); font-weight: 600; font-size: 23px; letter-spacing: -0.01em; margin: 36px 0 8px; line-height: 1.2; }
     .post p { font-size: 18px; line-height: 1.7; margin-bottom: 18px; font-weight: 300; }
     .post .sig { font-weight: 500; }
-    /* one highlighted line per section: read only these and you have the argument.
-       Tap one to agree; the more people agree with a line, the deeper its highlight (--w, 0..1). */
-    .post mark { color: inherit; font-weight: 500; --hl-now: rgba(var(--hl-rgb), calc(var(--hl-a0) + var(--w) * (var(--hl-a1) - var(--hl-a0))));
-      background: linear-gradient(transparent 52%, var(--hl-now) 52%, var(--hl-now) 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; transition: --w 0.6s ease, box-shadow 0.2s; }
-    .post mark[data-line] { cursor: pointer; }
-    .post mark[data-line]:hover { box-shadow: inset 0 -2px 0 rgba(var(--hl-rgb), 0.45); }
-    .post mark[aria-pressed="true"] { box-shadow: inset 0 -2px 0 rgba(var(--hl-rgb), 0.95); }
-    .post mark[aria-pressed="true"][data-count]::after { content: attr(data-count); font-size: 11px; font-weight: 600; color: var(--tint); margin-left: 3px; vertical-align: super; line-height: 0; }
-    .post mark:focus-visible { outline: 2px solid var(--tint); outline-offset: 2px; }
-    .post .hint { font-size: 14px; color: var(--muted); margin: 0; }
+    /* one highlighted line per section: read only these and you have the argument */
+    .post mark { color: inherit; font-weight: 500; background: linear-gradient(transparent 52%, var(--hl) 52%, var(--hl) 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; }
     .cta { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 48px; text-align: center; }
     .badge img { height: 48px; }
     .post .free { font-size: 14px; font-weight: 400; line-height: 1.4; margin: 0; color: var(--soft); }
@@ -162,43 +153,42 @@
         <picture><source srcset="assets/icon-dark.png" media="(prefers-color-scheme: dark)" /><img src="assets/icon.png" alt="" width="72" height="72" /></picture>
         <h1>(Re)introducing Ahead for iOS</h1>
         <p class="date">October 2026</p>
-        <p class="hint">Tap a highlighted line if it rings true.</p>
       </div>
 
       <p>I haven't written about Ahead in a while. Most of that time went to figuring out what it should be in a world full of agents, and the answer turned out to be smaller than I expected.</p>
-      <p>Here's what I still believe. <mark data-line="surface" role="button" tabindex="0" aria-pressed="false">Your calendar, your reminders and your health deserve one surface, and you should be able to shape that surface to fit your life.</mark> For free. I'm a busy parent. I care about my health at a high level, and about what I need to do today to set myself up for the days, weeks and months ahead. Apple built a good calendar. Ahead takes it and extends it the way I'd want it extended.</p>
-      <p>I'm also bearish on AI assistants, at least the kind that want to run your personal life. <mark data-line="control" role="button" tabindex="0" aria-pressed="false">People want to stay in control of it.</mark> The backlash from the people inside the technology, paired with how little the people outside it understand, tells me that isn't changing soon.</p>
+      <p>Here's what I still believe. <mark>Your calendar, your reminders and your health deserve one surface, and you should be able to shape that surface to fit your life.</mark> For free. I'm a busy parent. I care about my health at a high level, and about what I need to do today to set myself up for the days, weeks and months ahead. Apple built a good calendar. Ahead takes it and extends it the way I'd want it extended.</p>
+      <p>I'm also bearish on AI assistants, at least the kind that want to run your personal life. <mark>People want to stay in control of it.</mark> The backlash from the people inside the technology, paired with how little the people outside it understand, tells me that isn't changing soon.</p>
 
       <h3>In your hands</h3>
-      <p><mark data-line="worse" role="button" tabindex="0" aria-pressed="false">I think people are coming to AI because apps have gotten worse.</mark> They're overloaded with information, the important parts are buried, and the experience isn't good.</p>
-      <p>What if software acted exactly the way you wanted? What if it was only for you, and didn't reach out into unknowable black boxes to pull things back in? Your experience, the way you want it, in your hands. That's what I want Ahead to be: something that gives you <mark data-line="agency" role="button" tabindex="0" aria-pressed="false">more agency over your digital life</mark>.</p>
+      <p><mark>I think people are coming to AI because apps have gotten worse.</mark> They're overloaded with information, the important parts are buried, and the experience isn't good.</p>
+      <p>What if software acted exactly the way you wanted? What if it was only for you, and didn't reach out into unknowable black boxes to pull things back in? Your experience, the way you want it, in your hands. That's what I want Ahead to be: something that gives you <mark>more agency over your digital life</mark>.</p>
 
       <h3>Less</h3>
-      <p>There were a lot of things I thought 2.0 might end up being. "Less" wasn't one of them. A designer I worked with, Puckett, once told me that <mark data-line="remove" role="button" tabindex="0" aria-pressed="false">good design is figuring out what needs to be removed</mark>, or something close to that, and I think about it every day. Here is everything that led there.</p>
+      <p>There were a lot of things I thought 2.0 might end up being. "Less" wasn't one of them. A designer I worked with, Puckett, once told me that <mark>good design is figuring out what needs to be removed</mark>, or something close to that, and I think about it every day. Here is everything that led there.</p>
 
       <h3>What matters, three times a day</h3>
-      <p>The information you need at 8 in the morning is different from what you need at 8 at night, so that became the spine of the app. Ahead checks in three times a day: morning, midday and evening. Each one reads your calendar, your reminders and how you slept, and puts what matters at the top. Swipe a card right and more of that comes first. Swipe left and less of it does. It's yours to shape, which is what people keep telling me they want from their technology: <mark data-line="ownership" role="button" tabindex="0" aria-pressed="false">more ownership, not more magic</mark>.</p>
+      <p>The information you need at 8 in the morning is different from what you need at 8 at night, so that became the spine of the app. Ahead checks in three times a day: morning, midday and evening. Each one reads your calendar, your reminders and how you slept, and puts what matters at the top. Swipe a card right and more of that comes first. Swipe left and less of it does. It's yours to shape, which is what people keep telling me they want from their technology: <mark>more ownership, not more magic</mark>.</p>
 
       <h3>I rethought what it is at its core</h3>
-      <p>I'd been adding features that made sense on their own, and in some way they did, but each one took the app further from what I needed it to be. <mark data-line="honest" role="button" tabindex="0" aria-pressed="false">I noticed I was using it less, and I had to be honest about why.</mark></p>
+      <p>I'd been adding features that made sense on their own, and in some way they did, but each one took the app further from what I needed it to be. <mark>I noticed I was using it less, and I had to be honest about why.</mark></p>
 
       <h3>Apple Intelligence is good enough</h3>
-      <p>Ahead used to send your day to Claude to be written. Now Apple's on-device model writes it, on your phone. There are tradeoffs, mostly in how varied the writing is, but after a lot of testing I'm confident that <mark data-line="apple" role="button" tabindex="0" aria-pressed="false">what most people need, Apple can handle</mark>. And where the writing isn't the point, the app now builds the facts directly: the next thing coming up, what to wear, the nudge on your Lock Screen.</p>
+      <p>Ahead used to send your day to Claude to be written. Now Apple's on-device model writes it, on your phone. There are tradeoffs, mostly in how varied the writing is, but after a lot of testing I'm confident that <mark>what most people need, Apple can handle</mark>. And where the writing isn't the point, the app now builds the facts directly: the next thing coming up, what to wear, the nudge on your Lock Screen.</p>
 
       <h3>Faster</h3>
-      <p>The speed was the first thing that made me want to rip Claude out. Calling an external API, running it through several prompts and synthesizing the result took longer than I'd wait for an app to tell me what's next. <mark data-line="seconds" role="button" tabindex="0" aria-pressed="false">On the phone it's seconds, and it works on a plane.</mark></p>
+      <p>The speed was the first thing that made me want to rip Claude out. Calling an external API, running it through several prompts and synthesizing the result took longer than I'd wait for an app to tell me what's next. <mark>On the phone it's seconds, and it works on a plane.</mark></p>
 
       <h3>Less to manage, less to go wrong</h3>
-      <p>I'm one person. Every integration is a risk, and the risk compounds with each one you add. During TestFlight, a friend who isn't in tech asked me, "How do I know this app won't steal my data?" I scoffed at first. Then I realized I didn't actually know. I'm used to signing in with Google; a lot of people aren't, and they're right to ask. I'm not equipped to handle it if something goes wrong, so the honest answer was to make sure nothing can. <mark data-line="nothing" role="button" tabindex="0" aria-pressed="false">No account. No servers. Nothing uploaded.</mark> The only thing that leaves your phone is your location, to Apple, for the weather.</p>
+      <p>I'm one person. Every integration is a risk, and the risk compounds with each one you add. During TestFlight, a friend who isn't in tech asked me, "How do I know this app won't steal my data?" I scoffed at first. Then I realized I didn't actually know. I'm used to signing in with Google; a lot of people aren't, and they're right to ask. I'm not equipped to handle it if something goes wrong, so the honest answer was to make sure nothing can. <mark>No account. No servers. Nothing uploaded.</mark> The only thing that leaves your phone is your location, to Apple, for the weather.</p>
 
       <h3>Charging for software just feels wrong</h3>
-      <p><mark data-line="plus" role="button" tabindex="0" aria-pressed="false">Ahead Plus is gone.</mark> I build things for the love of the game. More money would be nice, but I'm doing fine, and I'd rather this be in as many hands as possible.</p>
+      <p><mark>Ahead Plus is gone.</mark> I build things for the love of the game. More money would be nice, but I'm doing fine, and I'd rather this be in as many hands as possible.</p>
 
       <h3>On the assistants</h3>
-      <p>Things like Muse are great conceptually. <mark data-line="trust" role="button" tabindex="0" aria-pressed="false">Trust will be their limit.</mark> They obfuscate the security risks too well, and the mascots are too cute.</p>
+      <p>Things like Muse are great conceptually. <mark>Trust will be their limit.</mark> They obfuscate the security risks too well, and the mascots are too cute.</p>
 
       <h3>Why</h3>
-      <p><mark data-line="craft" role="button" tabindex="0" aria-pressed="false">To put my craft and taste into something I think people want.</mark> That bet, and finding out how it lands, is what keeps me going.</p>
+      <p><mark>To put my craft and taste into something I think people want.</mark> That bet, and finding out how it lands, is what keeps me going.</p>
       <p>Ahead 2.0 is free on the App Store. Download it, tell me what's wrong with it, and I'll keep removing things.</p>
       <p class="sig">James</p>
 
@@ -263,17 +253,6 @@
 
   <script>
     const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
-    const keep = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
-    const esc = t => t.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    async function pulse(body) { // the counts live behind /api/pulse; without it, everything still works on this device
-      try {
-        const r = await fetch('/api/pulse', body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
-        return r.ok ? await r.json() : null;
-      } catch { return null; }
-    }
-    let tally = null; // { lines: { id: n } }
-    const myLines = keep.get('ahead.lines', {});
-
     let toastT; const toast = $('#toast');
     function say(text) { toast.textContent = text; toast.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('on'), 2800); }
 
@@ -354,34 +333,6 @@
       stack.classList.add('pre'); plate.classList.add('pre');
       new IntersectionObserver((entries, obs) => { if (entries.some(e => e.isIntersecting)) { obs.disconnect(); deal(); } }, { threshold: 0.6 }).observe(plate);
     }
-
-    // ── the post: tap a highlighted line if it rings true ──
-    const marks = $$('.post mark[data-line]');
-    function paintLines() {
-      const counts = marks.map(m => tally ? (tally.lines[m.dataset.line] || 0) : 0), max = Math.max(1, ...counts);
-      marks.forEach((m, k) => {
-        const mine = !!myLines[m.dataset.line];
-        m.style.setProperty('--w', tally ? (counts[k] / max).toFixed(3) : (mine ? '0.6' : '0'));
-        m.setAttribute('aria-pressed', mine ? 'true' : 'false');
-        if (tally) { m.dataset.count = counts[k]; m.title = `${counts[k]} ${counts[k] === 1 ? 'person agrees' : 'people agree'}`; }
-      });
-    }
-    async function toggleLine(m) {
-      const id = m.dataset.line, on = !myLines[id];
-      if (on) myLines[id] = 1; else delete myLines[id];
-      keep.set('ahead.lines', myLines);
-      if (tally) tally.lines[id] = Math.max(0, (tally.lines[id] || 0) + (on ? 1 : -1));
-      paintLines();
-      const res = await pulse({ kind: 'agree', id, on });
-      if (res && typeof res.n === 'number') { tally = tally || { lines: {} }; tally.lines[id] = res.n; paintLines(); }
-    }
-    marks.forEach(m => {
-      m.addEventListener('click', () => { const sel = getSelection(); if (sel && !sel.isCollapsed) return; toggleLine(m); });
-      m.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLine(m); } });
-    });
-    paintLines();
-
-    pulse().then(t => { if (t && t.lines) { tally = t; paintLines(); } });
   </script>
 </body>
 </html>
